@@ -64,6 +64,24 @@ app.get('/entries/:id', async (req, res) => {
     })
 })
 
+app.get('/entries/:id/edit', async (req, res) => {
+    const foundEntry = await Entry.findById(req.params.id)
+    res.render('entry/edit.ejs', {
+        entry: foundEntry
+    })
+})
+
+app.put('/entries/:id', async (req, res) => {
+    const updatedEntry = req.body
+
+    // Change input strings to Nums
+    updatedEntry.postedDay = parseInt(updatedEntry.postedDay)
+    updatedEntry.amount = parseInt(updatedEntry.amount)
+    
+    await Entry.findByIdAndUpdate(req.params.id, updatedEntry)
+    res.redirect('/entries')
+})
+
 app.delete('/entries/:id', async (req, res) => {
     await Entry.findByIdAndDelete(req.params.id)
     res.redirect('/entries')
