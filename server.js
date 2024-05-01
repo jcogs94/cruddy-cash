@@ -98,6 +98,30 @@ app.delete('/entries/:id', async (req, res) => {
 })
 
 // ---------------- CATEGORIES -------------- //
+app.get('/categories', async (req, res) => {
+    const allCategories = await Category.find()
+
+    // Define arrays for income and expense based on
+    // isIncome
+    let incomeCategories = []
+    let expenseCategories = []
+
+    // Loop through allCategories and push accordingly
+    // to sort by isIncome
+    allCategories.forEach( (category) => {
+        if(category.isIncome) {
+            incomeCategories.push(category)
+        } else {
+            expenseCategories.push(category)
+        }
+    })
+
+    res.render('./category/index.ejs', {
+        incomeCategories: incomeCategories,
+        expenseCategories: expenseCategories
+    })
+})
+
 app.get('/categories/new', (req, res) => {
     res.render('category/new.ejs')
 })
