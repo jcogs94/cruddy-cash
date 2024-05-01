@@ -19,7 +19,7 @@
             <form action="">
                 <button type="submit">Edit Entry</button>
             </form>
-            <form action="">
+            <form action="/entries/<%= entry._id %>?_method=delete" method="post">
                 <button type="submit">Delete Entry</button>
             </form>
         </div>

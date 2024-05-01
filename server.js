@@ -63,6 +63,11 @@ app.get('/entries/:id', async (req, res) => {
         entry: foundEntry
     })
 })
+
+app.delete('/entries/:id', async (req, res) => {
+    await Entry.findByIdAndDelete(req.params.id)
+    res.redirect('/entries')
+})
 // ================ ROUTES ================== //
 
 
