@@ -4,12 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <title>New Entry</title>
+    <title>CRUDdy Cash - New Entry</title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1>New Entry</h1>
+        <form action="/entry" method="post">
+            <fieldset aria-labelledby="new-entry-legend">
+                <legend name="new-entry-legend">Create Entry</legend>
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" name="name">
+                </div>
+                <div>
+                    <label for="postedDay">Day Posted:</label>
+                    <input type="number" name="postedDay">
+                </div>
+                <div>
+                    <label for="amount">Amount:</label>
+                    <input type="number" name="amount">
+                </div>
+                <button type="submit">Create</button>
+            </fieldset>
+        </form>
     </main>
 </body>
 </html>
