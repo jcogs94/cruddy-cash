@@ -1,0 +1,18 @@
+.days-container, .day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.days-container {
+    gap: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul > li {
+    margin: 15px 0;
+}
