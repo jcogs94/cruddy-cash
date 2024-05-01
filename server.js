@@ -102,6 +102,20 @@ app.get('/categories/new', (req, res) => {
     res.render('category/new.ejs')
 })
 
+app.post('/categories', async (req, res) => {
+    const newCategory = req.body
+
+    // Changes isIncome type to boolean
+    if(newCategory.isIncome === 'true') {
+        newCategory.isIncome = true
+    } else if(newCategory.isIncome === 'false') {
+        newCategory.isIncome = false
+    }
+
+    await Category.create(newCategory)
+    res.redirect('/')
+})
+
 
 // ================ SERVER ================== //
 mongoose.connection.on('connected', () => {

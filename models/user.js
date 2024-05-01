@@ -8,7 +8,7 @@ const entrySchema = new mongoose.Schema({
 
 const categorySchema = new mongoose.Schema({
     name: String,
-    isExpense: Boolean,
+    isIncome: Boolean,
     entries: [entrySchema]
 })
 
@@ -30,5 +30,5 @@ const categorySchema = new mongoose.Schema({
 // const User = mongoose.model('User', userSchema)
 // module.exports = User
 
-const Category = mongoose.model('Entry', entrySchema)
+const Category = mongoose.model('Category', categorySchema)
 module.exports = Category
