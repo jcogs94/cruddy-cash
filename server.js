@@ -25,10 +25,12 @@ const createEntry = async (categoryId, newEntry) => {
 
 
 // ================ ROUTES ================== //
+// Home page
 app.get('/', (req, res) => {
     res.render('index.ejs')
 })
 
+// ---------------- ENTRIES ----------------- //
 app.get('/entries', async (req, res) => {
     const allEntries = await Entry.find();
 
@@ -93,6 +95,11 @@ app.put('/entries/:id', async (req, res) => {
 app.delete('/entries/:id', async (req, res) => {
     await Entry.findByIdAndDelete(req.params.id)
     res.redirect('/entries')
+})
+
+// ---------------- CATEGORIES -------------- //
+app.get('/categories/new', (req, res) => {
+    res.render('category/new.ejs')
 })
 
 
