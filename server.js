@@ -18,6 +18,10 @@ app.use(methodOverride('_method'))
 app.get('/', (req, res) => {
     res.render('index.ejs')
 })
+
+app.get('/budget/new', (req, res) => {
+    res.render('budget/new.ejs')
+})
 // ================ ROUTES ================== //
 
 
