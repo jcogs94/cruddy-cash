@@ -9,6 +9,8 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const methodOverride = require('method-override')
 
+const Entry = require('./models/budget.js')
+
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.use(methodOverride('_method'))
@@ -21,6 +23,15 @@ app.get('/', (req, res) => {
 
 app.get('/entry/new', (req, res) => {
     res.render('entry/new.ejs')
+})
+
+app.post('/entry', async (req, res) => {
+    const newEntry = req.body
+    newEntry.postedDay = parseInt(newEntry.postedDay)
+    newEntry.amount = parseInt(newEntry.amount)
+    
+    await Entry.create(newEntry)
+    res.redirect('/')
 })
 // ================ ROUTES ================== //
 
