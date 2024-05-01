@@ -9,11 +9,19 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const methodOverride = require('method-override')
 
-const Entry = require('./models/budget.js')
+const Category = require('./models/user.js')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.use(methodOverride('_method'))
+
+
+// =============== FUNCTIONS ================ //
+const createEntry = async (categoryId, newEntry) => {
+    const foundCategory = await Category.findById(monthId)
+    foundCategory.entries.push(newEntry)
+    await foundCategory.save()
+}
 
 
 // ================ ROUTES ================== //
@@ -86,9 +94,9 @@ app.delete('/entries/:id', async (req, res) => {
     await Entry.findByIdAndDelete(req.params.id)
     res.redirect('/entries')
 })
-// ================ ROUTES ================== //
 
 
+// ================ SERVER ================== //
 mongoose.connection.on('connected', () => {
     console.log('Connected to database...')
 })

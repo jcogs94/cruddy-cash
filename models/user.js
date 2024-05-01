@@ -6,11 +6,11 @@ const entrySchema = new mongoose.Schema({
     amount: Number
 })
 
-// const categorySchema = new mongoose.Schema({
-//     name: String,
-//     isExpense: Boolean,
-//     entries: [entrySchema]
-// })
+const categorySchema = new mongoose.Schema({
+    name: String,
+    isExpense: Boolean,
+    entries: [entrySchema]
+})
 
 // const budgetSchema = new mongoose.Schema({
 //     year: Number,
@@ -30,5 +30,5 @@ const entrySchema = new mongoose.Schema({
 // const User = mongoose.model('User', userSchema)
 // module.exports = User
 
-const Entry = mongoose.model('Entry', entrySchema)
-module.exports = Entry
+const Category = mongoose.model('Entry', entrySchema)
+module.exports = Category
