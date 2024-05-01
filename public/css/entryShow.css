@@ -1,0 +1,10 @@
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}

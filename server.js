@@ -56,6 +56,13 @@ app.post('/entries', async (req, res) => {
     await Entry.create(newEntry)
     res.redirect('/entries')
 })
+
+app.get('/entries/:id', async (req, res) => {
+    const foundEntry = await Entry.findById(req.params.id)
+    res.render('entry/show.ejs', {
+        entry: foundEntry
+    })
+})
 // ================ ROUTES ================== //
 
 

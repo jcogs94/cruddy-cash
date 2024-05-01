@@ -17,7 +17,9 @@
                     <h2>Day <%= day %></h2>
                     <ul>
                         <% entries[day].forEach( (entry) => { %>
-                            <li><b><%= entry.name %>:</b> $<%= entry.amount %></li>
+                            <li>
+                                <a href="/entries/<%= entry._id %>"><b><%= entry.name %>:</b> $<%= entry.amount %></a>
+                            </li>
                         <% }) %>
                     </ul>
                 </div>
