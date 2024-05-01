@@ -19,8 +19,8 @@ app.get('/', (req, res) => {
     res.render('index.ejs')
 })
 
-app.get('/budget/new', (req, res) => {
-    res.render('budget/new.ejs')
+app.get('/entry/new', (req, res) => {
+    res.render('entry/new.ejs')
 })
 // ================ ROUTES ================== //
 
