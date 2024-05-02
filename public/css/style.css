@@ -57,3 +57,7 @@ fieldset > button {
     align-self: center;
     margin-top: 10px;
 }
+
+button {
+    cursor: pointer;
+}
