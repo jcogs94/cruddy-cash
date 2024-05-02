@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/indexList.css">
+    <title>CRUDdy Cash - View Budgets</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <main>
+        <h1>All Budgets</h1>
+        <% if(years.length > 0) { %>
+            <% years.forEach( (year) => { %>
+                <div class="list-container">
+                    <h3><%= year %></h3>
+                    <ul class="list">
+                        <% budgets[year].forEach( (budget) => { %>
+                            <li>
+                                <a href="/budgets/<%= budget._id %>"><%= budget.month %></a>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p><em>There are no budgets created yet</em></p>
+        <% } %>
+    </main>
+</body>
+</html>
