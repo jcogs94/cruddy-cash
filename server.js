@@ -169,10 +169,13 @@ app.post('/budgets/:budgetId/categories', async (req, res) => {
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+
     res.render('category/show.ejs', {
+        budget: foundBudget,
         category: foundCategory
-    })    
+    })
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId/edit', async (req, res) => {
