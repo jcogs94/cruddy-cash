@@ -142,11 +142,15 @@ app.get('/categories', async (req, res) => {
     })
 })
 
-app.get('/categories/new', (req, res) => {
-    res.render('category/new.ejs')
+app.get('/budgets/:budgetId/categories/new', async (req, res) => {
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    res.render('category/new.ejs', {
+        budget: foundBudget
+    })
 })
 
-app.post('/categories', async (req, res) => {
+app.post('/budgets/:budgetId/categories', async (req, res) => {
+    const foundBudget = await Budget.findById(req.params.budgetId)
     const newCategory = req.body
     
     // Changes isIncome type to boolean
@@ -156,25 +160,29 @@ app.post('/categories', async (req, res) => {
         newCategory.isIncome = false
     }
     
-    await Category.create(newCategory)
-    res.redirect('/categories')
+    // Pushes new entry to entry array and saves the category
+    // changes
+    foundBudget.categories.push(newCategory)
+    await foundBudget.save()
+    
+    res.redirect(`/budgets/${req.params.budgetId}`)
 })
 
-app.get('/categories/:categoryId', async (req, res) => {
+app.get('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     res.render('category/show.ejs', {
         category: foundCategory
     })    
 })
 
-app.get('/categories/:categoryId/edit', async (req, res) => {
+app.get('/budgets/:budgetId/categories/:categoryId/edit', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     res.render('category/edit.ejs', {
         category: foundCategory
     })
 })
 
-app.put('/categories/:categoryId', async (req, res) => {
+app.put('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
     const updatedCategory = req.body
     
     // Changes isIncome type to boolean
@@ -188,7 +196,7 @@ app.put('/categories/:categoryId', async (req, res) => {
     res.redirect(`/categories/${req.params.categoryId}`)
 })
 
-app.delete('/categories/:categoryId', async (req, res) => {
+app.delete('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
     await Category.findByIdAndDelete(req.params.categoryId)
     res.redirect('/categories')
 })
@@ -215,14 +223,14 @@ app.get('/entries', async (req, res) => {
     })
 })
 
-app.get('/categories/:categoryId/entries/new', async (req, res) => {
+app.get('/budgets/:budgetId/categories/:categoryId/entries/new', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     res.render('entry/new.ejs', {
         category: foundCategory
     })
 })
 
-app.post('/categories/:categoryId/entries', async (req, res) => {
+app.post('/budgets/:budgetId/categories/:categoryId/entries', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     const newEntry = req.body
     
@@ -238,7 +246,7 @@ app.post('/categories/:categoryId/entries', async (req, res) => {
     res.redirect(`/categories/${req.params.categoryId}`)
 })
 
-app.get('/categories/:categoryId/entries/:entryId', async (req, res) => {
+app.get('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     const foundEntry = foundCategory.entries.id(req.params.entryId)
 
@@ -248,7 +256,7 @@ app.get('/categories/:categoryId/entries/:entryId', async (req, res) => {
     })
 })
 
-app.get('/categories/:categoryId/entries/:entryId/edit', async (req, res) => {
+app.get('/budgets/:budgetId/categories/:categoryId/entries/:entryId/edit', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     const foundEntry = foundCategory.entries.id(req.params.entryId)
     res.render('entry/edit.ejs', {
@@ -257,7 +265,7 @@ app.get('/categories/:categoryId/entries/:entryId/edit', async (req, res) => {
     })
 })
 
-app.put('/categories/:categoryId/entries/:entryId', async (req, res) => {
+app.put('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     const foundEntry = foundCategory.entries.id(req.params.entryId)
     const updatedEntry = req.body
@@ -270,7 +278,7 @@ app.put('/categories/:categoryId/entries/:entryId', async (req, res) => {
     res.redirect(`/categories/${foundCategory._id}/entries/${foundEntry._id}`)
 })
 
-app.delete('/categories/:categoryId/entries/:entryId', async (req, res) => {
+app.delete('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     
     foundCategory.entries.pull(req.params.entryId)
