@@ -17,10 +17,10 @@
             <li><b>Amount:</b> $<%= entry.amount %></li>
         </ul>
         <div>
-            <form action="/entries/<%= entry._id %>/edit" method="get">
+            <form action="/categories/<%= category._id %>/entries/<%= entry._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/entries/<%= entry._id %>?_method=delete" method="post">
+            <form action="/categories/<%= category._id %>/entries/<%= entry._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>

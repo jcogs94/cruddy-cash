@@ -17,59 +17,18 @@ app.use(methodOverride('_method'))
 
 
 // =============== FUNCTIONS ================ //
-const createEntry = async (categoryId, newEntry) => {
-    const foundCategory = await Category.findById(categoryId)
-    
-    // Pushes new entry to entry array and saves the category
-    // changes
-    foundCategory.entries.push(newEntry)
-    await foundCategory.save()
-    
-    // Returns the found category for reference by caller
-    return foundCategory
-}
+// Updates sub-docs based on passed obj
+const updateChild = async (parent, child, updatedChild) => {
+    // Obtains keys for updated values    
+    const childKeys = Object.keys(updatedChild)
 
-// Loops through passed obj to find the array of embedded
-// documents. It then compares the ids of the embedded docs
-// to the given id and returns the found match
-const findEmbeddedDoc = (parent, embeddedId) => {
-    let foundEmbeddedDoc = {}
-    let embeddedArr = []
-    const parentValues = Object.values(parent)
-
-    // Uses nested loops to find the array of objects inside
-    // the parentValues. The initial values of parentValues
-    // returns multiple values other than the data obj, so
-    // a nested childValues obj had to be created to find
-    // the data obj so THAT could be iterated over to find
-    // the embedded array
-    parentValues.forEach( (parentValue) => {
-        if (typeof(parentValue) === 'object') {
-            const childValues = Object.values(parentValue)
-            
-            childValues.forEach( (value) => {
-                if(Array.isArray(value)) {
-                    embeddedArr = value
-                }
-            })
-        }
-    })
-    
-    // Loops through the array of embedded docs and
-    // stores the matched id object for return
-    embeddedArr.forEach( (embeddedDoc) => {
-        if (embeddedDoc.id === embeddedId) {
-            foundEmbeddedDoc = embeddedDoc
-        }
+    // Loops through keys and updates sub-doc's values
+    childKeys.forEach( (key) => {
+        child[key] = updatedChild[key]
     })
 
-    // If matching id not found, name is undefined
-    // If not found, returns false, else returns found obj
-    if (foundEmbeddedDoc.name === undefined) {
-        return false
-    } else {
-        return foundEmbeddedDoc
-    }
+    // Saves changes at the parent level
+    await parent.save()
 }
 
 
@@ -159,53 +118,51 @@ app.get('/categories/:categoryId/entries/new', async (req, res) => {
 })
 
 app.post('/categories/:categoryId/entries', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
     const newEntry = req.body
     
     // Change input strings to Nums
     newEntry.postedDay = parseInt(newEntry.postedDay)
     newEntry.amount = parseInt(newEntry.amount)
     
-    // Calls function to create new entry then redirects
-    // to show page for category
-    await createEntry(req.params.categoryId, newEntry)
+    // Pushes new entry to entry array and saves the category
+    // changes
+    foundCategory.entries.push(newEntry)
+    await foundCategory.save()
+    
     res.redirect(`/categories/${req.params.categoryId}`)
 })
 
 app.get('/categories/:categoryId/entries/:entryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
-    
-    // Calls function to find entry in category entry array, returns false
-    // if not found
-    const foundEntry = findEmbeddedDoc(foundCategory, req.params.entryId)
+    const foundEntry = foundCategory.entries.id(req.params.entryId)
 
-    // If matching id not found, redirects to category show page,
-    // else, renders entry show page
-    if (foundEntry === false) {
-        res.redirect(`/categories/${req.params.categoryId}`)
-    } else {
-        res.render('entry/show.ejs', {
-            category: foundCategory,
-            entry: foundEntry
-        })
-    }
-})
-
-app.get('/entries/:id/edit', async (req, res) => {
-    const foundEntry = await Entry.findById(req.params.id)
-    res.render('entry/edit.ejs', {
+    res.render('entry/show.ejs', {
+        category: foundCategory,
         entry: foundEntry
     })
 })
 
-app.put('/entries/:id', async (req, res) => {
+app.get('/categories/:categoryId/entries/:entryId/edit', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundEntry = foundCategory.entries.id(req.params.entryId)
+    res.render('entry/edit.ejs', {
+        category: foundCategory,
+        entry: foundEntry
+    })
+})
+
+app.put('/categories/:categoryId/entries/:entryId', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundEntry = foundCategory.entries.id(req.params.entryId)
     const updatedEntry = req.body
 
     // Change input strings to Nums
     updatedEntry.postedDay = parseInt(updatedEntry.postedDay)
     updatedEntry.amount = parseInt(updatedEntry.amount)
     
-    await Entry.findByIdAndUpdate(req.params.id, updatedEntry)
-    res.redirect('/entries')
+    updateChild(foundCategory, foundEntry, updatedEntry)
+    res.redirect(`/categories/${foundCategory._id}/entries/${foundEntry._id}`)
 })
 
 app.delete('/entries/:id', async (req, res) => {
