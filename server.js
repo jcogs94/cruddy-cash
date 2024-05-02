@@ -296,12 +296,13 @@ app.put('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req
 })
 
 app.delete('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
     
     foundCategory.entries.pull(req.params.entryId)
-    await foundCategory.save()
+    await foundBudget.save()
     
-    res.redirect(`/categories/${foundCategory._id}`)
+    res.redirect(`/budgets/${foundBudget._id}/categories/${foundCategory._id}`)
 })
 
 
