@@ -10,20 +10,21 @@
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1><%= category.name %></h1>
+        <h1><%= budget.name %></h1>
+        <h2><%= category.name %></h2>
         <h3><%= entry.name %></h3>
         <ul>
             <li><b>Day Posted:</b> <%= entry.postedDay %></li>
             <li><b>Amount:</b> $<%= entry.amount %></li>
         </ul>
         <div>
-            <form action="/categories/<%= category._id %>" method="get">
+            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>" method="get">
                 <button type="submit">Go Back</button>
             </form>
-            <form action="/categories/<%= category._id %>/entries/<%= entry._id %>/edit" method="get">
+            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/categories/<%= category._id %>/entries/<%= entry._id %>?_method=delete" method="post">
+            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>
