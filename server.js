@@ -200,8 +200,12 @@ app.put('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
 })
 
 app.delete('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
-    await Category.findByIdAndDelete(req.params.categoryId)
-    res.redirect('/categories')
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    
+    foundBudget.categories.pull(req.params.categoryId)
+    await foundBudget.save()
+    
+    res.redirect(`/budgets/${req.params.budgetId}`)
 })
 
 // ---------------- ENTRIES ----------------- //
