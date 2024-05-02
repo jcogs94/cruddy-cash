@@ -11,11 +11,12 @@
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1><%= category.name %> (<% if(category.isIncome) { %>
+        <h1><%= budget.name %></h1>
+        <h2><%= category.name %> (<% if(category.isIncome) { %>
             income
         <% } else { %>
             expense
-        <% } %>)</h1>
+        <% } %>)</h2>
         <% if(category.entries.length === 0) { %>
             <p><em>There are no entries for this category.</em></p>
         <% } else { %>
@@ -32,13 +33,13 @@
             <form action="/budgets/<%= budget._id %>" method="get">
                 <button type="submit">Go Back</button>
             </form>
-            <form action="/categories/<%= category._id %>/entries/new" method="get">
+            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries/new" method="get">
                 <button type="submit">Create Entry</button>
             </form>
-            <form action="/categories/<%= category._id %>/edit" method="get">
+            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/categories/<%= category._id %>?_method=delete" method="post">
+            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>
