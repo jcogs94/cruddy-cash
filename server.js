@@ -98,17 +98,18 @@ app.get('/budgets/:budgetId/edit', async (req, res) => {
 })
 
 app.put('/budgets/:budgetId', async (req, res) => {
-    const updatedCategory = req.body
+    const updatedBudget = req.body
     
-    // Changes isIncome type to boolean
-    if(updatedCategory.isIncome === 'true') {
-        updatedCategory.isIncome = true
-    } else if(updatedCategory.isIncome === 'false') {
-        updatedCategory.isIncome = false
-    }
+    // Creates a name for the budget based on year and month
+    updatedBudget.name = updatedBudget.month + ' ' + updatedBudget.year
 
-    await Category.findByIdAndUpdate(req.params.categoryId, updatedCategory)
-    res.redirect('/categories')
+    // Type changes for model compliance
+    updatedBudget.year = parseInt(updatedBudget.year)
+    updatedBudget.incomePlanned = parseInt(updatedBudget.incomePlanned)
+    updatedBudget.expensesPlanned = parseInt(updatedBudget.expensesPlanned)
+    
+    await Budget.findByIdAndUpdate(req.params.budgetId, updatedBudget)
+    res.redirect('/budgets')
 })
 
 app.delete('/budgets/:budgetId', async (req, res) => {
@@ -184,7 +185,7 @@ app.put('/categories/:categoryId', async (req, res) => {
     }
 
     await Category.findByIdAndUpdate(req.params.categoryId, updatedCategory)
-    res.redirect('/categories')
+    res.redirect(`/categories/${req.params.categoryId}`)
 })
 
 app.delete('/categories/:categoryId', async (req, res) => {
