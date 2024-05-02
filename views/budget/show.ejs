@@ -32,14 +32,30 @@
         <% if(budget.categories.length === 0) { %>
             <p><em>There are no categories for this budget.</em></p>
         <% } else { %>
-            <h2>Categories</h2>
-            <ul>
-                <% budget.categories.forEach( (category) => { %>
-                    <li>
-                        <a href="/budgets/<%= budget._id %>/categories/<%= category._id %>"><%= category.name %></a>
-                    </li>
-                <% }) %>
-            </ul>
+            <% if(incomeCategories.length > 0) { %>
+                <div class="list-container">
+                    <h2>Income</h2>
+                    <ul class="list">
+                        <% incomeCategories.forEach( (category) => { %>
+                            <li>
+                                <a href="/budgets/<%= budget._id %>/categories/<%= category._id %>"><%= category.name %></a>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% } %>
+            <% if(expenseCategories.length > 0) { %>
+                <div class="list-container">
+                    <h2>Expenses</h2>
+                    <ul class="list">
+                        <% expenseCategories.forEach( (category) => { %>
+                            <li>
+                                <a href="/budgets/<%= budget._id %>/categories/<%= category._id %>"><%= category.name %></a>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+            <% } %>
         <% } %>
         <div>
             <form action="/budgets" method="get">

@@ -85,8 +85,25 @@ app.post('/budgets', async (req, res) => {
 
 app.get('/budgets/:budgetId', async (req, res) => {
     const foundBudget = await Budget.findById(req.params.budgetId)
+
+    const budgetCategories = foundBudget.categories
+    let incomeCategories = []
+    let expenseCategories = []
+
+    // Loop through budgetCategories and push accordingly
+    // to sort by isIncome
+    budgetCategories.forEach( (category) => {
+        if(category.isIncome) {
+            incomeCategories.push(category)
+        } else {
+            expenseCategories.push(category)
+        }
+    })
+
     res.render('budget/show.ejs', {
-        budget: foundBudget
+        budget: foundBudget,
+        incomeCategories: incomeCategories,
+        expenseCategories: expenseCategories
     })    
 })
 
