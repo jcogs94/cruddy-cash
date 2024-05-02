@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/entryIndex.css">
+    <link rel="stylesheet" href="../css/indexList.css">
     <title>CRUDdy Cash - View Entries</title>
 </head>
 <body>
     <%- include('../partials/nav') %>
     <main>
         <h1>All Entries</h1>
-        <div class="days-container">
+        <div class="list-container">
             <% entriesKeys.forEach( (day) => { %>
-                <div class="day">
+                <div class="list">
                     <h2>Day <%= day %></h2>
                     <ul>
                         <% entries[day].forEach( (entry) => { %>

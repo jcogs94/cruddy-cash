@@ -6,15 +6,15 @@ const entrySchema = new mongoose.Schema({
     amount: Number
 })
 
-// const categorySchema = new mongoose.Schema({
-//     name: String,
-//     isExpense: Boolean,
-//     entries: [entrySchema]
-// })
+const categorySchema = new mongoose.Schema({
+    name: String,
+    isIncome: Boolean,
+    entries: [entrySchema]
+})
 
-// const budgetSchema = new mongoose.Schema({
+// const budgetMonthSchema = new mongoose.Schema({
 //     year: Number,
-//     monthName: String,
+//     name: String,
 //     incomePlanned: Number,
 //     incomeTotal: Number,
 //     expensesPlanned: Number,
@@ -30,5 +30,5 @@ const entrySchema = new mongoose.Schema({
 // const User = mongoose.model('User', userSchema)
 // module.exports = User
 
-const Entry = mongoose.model('Entry', entrySchema)
-module.exports = Entry
+const Category = mongoose.model('Category', categorySchema)
+module.exports = Category

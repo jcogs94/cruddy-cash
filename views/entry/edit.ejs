@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../css/style.css">
-    <script defer src="js/app.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
     <title>CRUDdy Cash - Edit <%= entry.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1><%= entry.name %></h1>
-        <form action="/entries/<%= entry._id %>?_method=put" method="post">
+        <h1><%= category.name %></h1>
+        <h3><%= entry.name %></h3>
+        <form action="/categories/<%= category._id %>/entries/<%= entry._id %>?_method=put" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Edit</legend>
                 <div>

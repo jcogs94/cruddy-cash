@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>CRUDdy Cash - Edit <%= category.name %></title>
+</head>
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <main>
+        <h1><%= category.name %></h1>
+        <form action="/categories/<%= category._id %>?_method=put" method="post">
+            <fieldset aria-labelledby="new-entry-legend">
+                <legend name="new-entry-legend">Edit</legend>
+                <div>
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" value="<%= category.name %>">
+                </div>
+                <div>
+                    <label for="income-group">Is this income?</label>
+                    <div name="income-group">
+                        <label for="income-yes">Yes</label>
+                        <input type="radio" id="income-yes" name="isIncome" value="true" <% if (category.isIncome) { %>
+                            checked
+                        <% } %>>
+                        <label for="income-no">No</label>
+                        <input type="radio" id="income-no" name="isIncome" value="false" <% if (!category.isIncome) { %>
+                            checked
+                        <% } %>>
+                    </div>
+                </div>
+                <button type="submit">Update</button>
+            </fieldset>
+        </form>
+    </main>
+</body>
+</html>
