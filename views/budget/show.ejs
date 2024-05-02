@@ -36,7 +36,7 @@
             <ul>
                 <% budget.categories.forEach( (category) => { %>
                     <li>
-                        <a href="/bugets/categories/<%= category._id %>"><%= category.name %></a>
+                        <a href="/budgets/<%= budget._id %>/categories/<%= category._id %>"><%= category.name %></a>
                     </li>
                 <% }) %>
             </ul>
