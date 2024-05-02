@@ -179,13 +179,18 @@ app.get('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId/edit', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    
     res.render('category/edit.ejs', {
+        budget: foundBudget,
         category: foundCategory
     })
 })
 
 app.put('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
     const updatedCategory = req.body
     
     // Changes isIncome type to boolean
@@ -195,8 +200,8 @@ app.put('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
         updatedCategory.isIncome = false
     }
 
-    await Category.findByIdAndUpdate(req.params.categoryId, updatedCategory)
-    res.redirect(`/categories/${req.params.categoryId}`)
+    updateChild(foundBudget, foundCategory, updatedCategory)
+    res.redirect(`/budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
 
 app.delete('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
