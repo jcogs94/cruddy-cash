@@ -156,7 +156,7 @@ app.put('/categories/:categoryId/entries/:entryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     const foundEntry = foundCategory.entries.id(req.params.entryId)
     const updatedEntry = req.body
-
+    
     // Change input strings to Nums
     updatedEntry.postedDay = parseInt(updatedEntry.postedDay)
     updatedEntry.amount = parseInt(updatedEntry.amount)
@@ -165,9 +165,13 @@ app.put('/categories/:categoryId/entries/:entryId', async (req, res) => {
     res.redirect(`/categories/${foundCategory._id}/entries/${foundEntry._id}`)
 })
 
-app.delete('/entries/:id', async (req, res) => {
-    await Entry.findByIdAndDelete(req.params.id)
-    res.redirect('/entries')
+app.delete('/categories/:categoryId/entries/:entryId', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
+    
+    foundCategory.entries.pull(req.params.entryId)
+    await foundCategory.save()
+    
+    res.redirect(`/categories/${foundCategory._id}`)
 })
 
 
