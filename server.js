@@ -262,10 +262,12 @@ app.post('/budgets/:budgetId/categories/:categoryId/entries', async (req, res) =
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
     const foundEntry = foundCategory.entries.id(req.params.entryId)
 
     res.render('entry/show.ejs', {
+        budget: foundBudget,
         category: foundCategory,
         entry: foundEntry
     })
