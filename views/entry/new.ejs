@@ -9,9 +9,10 @@
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1><%= category.name %></h1>
+        <h1><%= budget.name %></h1>
+        <h2><%= category.name %></h2>
         <h3>New Entry</h3>
-        <form action="/categories/<%= category._id %>/entries" method="post">
+        <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Create Entry</legend>
                 <div>

@@ -236,14 +236,17 @@ app.get('/entries', async (req, res) => {
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId/entries/new', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
     res.render('entry/new.ejs', {
+        budget: foundBudget,
         category: foundCategory
     })
 })
 
 app.post('/budgets/:budgetId/categories/:categoryId/entries', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
     const newEntry = req.body
     
     // Change input strings to Nums
@@ -253,9 +256,9 @@ app.post('/budgets/:budgetId/categories/:categoryId/entries', async (req, res) =
     // Pushes new entry to entry array and saves the category
     // changes
     foundCategory.entries.push(newEntry)
-    await foundCategory.save()
+    await foundBudget.save()
     
-    res.redirect(`/categories/${req.params.categoryId}`)
+    res.redirect(`/budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req, res) => {
