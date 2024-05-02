@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/entryShow.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/show.css">
     <title>CRUDdy Cash - <%= entry.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1><%= entry.name %></h1>
+        <h1><%= category.name %></h1>
+        <h3><%= entry.name %></h3>
         <ul>
             <li><b>Day Posted:</b> <%= entry.postedDay %></li>
             <li><b>Amount:</b> $<%= entry.amount %></li>

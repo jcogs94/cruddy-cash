@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <title>CRUDdy Cash - New Entry</title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1>New Entry</h1>
-        <form action="/entries" method="post">
+        <h1><%= category.name %></h1>
+        <h3>New Entry</h3>
+        <form action="/categories/<%= category._id %>/entries" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Create Entry</legend>
                 <div>

@@ -11,9 +11,9 @@
     <%- include('../partials/nav') %>
     <main>
         <h1>All Entries</h1>
-        <div class="days-container">
+        <div class="list-container">
             <% entriesKeys.forEach( (day) => { %>
-                <div class="day">
+                <div class="list">
                     <h2>Day <%= day %></h2>
                     <ul>
                         <% entries[day].forEach( (entry) => { %>
