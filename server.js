@@ -9,7 +9,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const methodOverride = require('method-override')
 
-const Category = require('./models/user.js')
+const Budget = require('./models/user.js')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
@@ -36,6 +36,84 @@ const updateChild = async (parent, child, updatedChild) => {
 // -------------- HOME PAGE ----------------- //
 app.get('/', (req, res) => {
     res.render('index.ejs')
+})
+
+// ------------------ BUDGETS --------------- //
+app.get('/budgets', async (req, res) => {
+    const allBudgets = await Budget.find()
+    
+    let budgetsByYear = {}
+    
+    // Loop through allCategories and push accordingly
+    // to sort by isIncome
+    allBudgets.forEach( (budget) => {
+        if(budgetsByYear[budget.year] === undefined) {
+            budgetsByYear[budget.year] = []
+        }
+        
+        budgetsByYear[budget.year].push(budget)
+    })
+    
+    const budgetYears = Object.keys(budgetsByYear)
+
+    res.render('./budget/index.ejs', {
+        budgets: budgetsByYear,
+        years: budgetYears
+    })
+})
+
+app.get('/budgets/new', (req, res) => {
+    res.render('budget/new.ejs')
+})
+
+app.post('/budgets', async (req, res) => {
+    const newBudget = req.body
+    
+    // Creates a name for the budget based on year and month
+    newBudget.name = newBudget.month + ' ' + newBudget.year
+
+    // Declarations for model compliance
+    newBudget.year = parseInt(newBudget.year)
+    newBudget.incomePlanned = parseInt(newBudget.incomePlanned)
+    newBudget.expensesPlanned = parseInt(newBudget.expensesPlanned)
+    newBudget.incomeTotal = 0
+    newBudget.expensesTotal = 0
+    
+    await Budget.create(newBudget)
+    res.redirect('/budgets')
+})
+
+app.get('/budgets/:budgetId', async (req, res) => {
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    res.render('budget/show.ejs', {
+        budget: foundBudget
+    })    
+})
+
+app.get('/budgets/:budgetId/edit', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
+    res.render('category/edit.ejs', {
+        category: foundCategory
+    })
+})
+
+app.put('/budgets/:budgetId', async (req, res) => {
+    const updatedCategory = req.body
+    
+    // Changes isIncome type to boolean
+    if(updatedCategory.isIncome === 'true') {
+        updatedCategory.isIncome = true
+    } else if(updatedCategory.isIncome === 'false') {
+        updatedCategory.isIncome = false
+    }
+
+    await Category.findByIdAndUpdate(req.params.categoryId, updatedCategory)
+    res.redirect('/categories')
+})
+
+app.delete('/budgets/:budgetId', async (req, res) => {
+    await Budget.findByIdAndDelete(req.params.budgetId)
+    res.redirect('/budgets')
 })
 
 // ---------------- CATEGORIES -------------- //
