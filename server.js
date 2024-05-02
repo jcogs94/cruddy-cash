@@ -88,6 +88,27 @@ app.get('/categories/:categoryId', async (req, res) => {
     })    
 })
 
+app.get('/categories/:categoryId/edit', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
+    res.render('category/edit.ejs', {
+        category: foundCategory
+    })
+})
+
+app.put('/categories/:categoryId', async (req, res) => {
+    const updatedCategory = req.body
+    
+    // Changes isIncome type to boolean
+    if(updatedCategory.isIncome === 'true') {
+        updatedCategory.isIncome = true
+    } else if(updatedCategory.isIncome === 'false') {
+        updatedCategory.isIncome = false
+    }
+
+    await Category.findByIdAndUpdate(req.params.categoryId, updatedCategory)
+    res.redirect('/categories')
+})
+
 app.delete('/categories/:categoryId', async (req, res) => {
     await Category.findByIdAndDelete(req.params.categoryId)
     res.redirect('/categories')
