@@ -78,14 +78,19 @@ app.post('/categories', async (req, res) => {
     }
     
     await Category.create(newCategory)
-    res.redirect('/')
+    res.redirect('/categories')
 })
 
-app.get('/categories/:id', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.id)
+app.get('/categories/:categoryId', async (req, res) => {
+    const foundCategory = await Category.findById(req.params.categoryId)
     res.render('category/show.ejs', {
         category: foundCategory
     })    
+})
+
+app.delete('/categories/:categoryId', async (req, res) => {
+    await Category.findByIdAndDelete(req.params.categoryId)
+    res.redirect('/categories')
 })
 
 // ---------------- ENTRIES ----------------- //
