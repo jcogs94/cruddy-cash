@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/show.css">
+    <link rel="stylesheet" href="../css/indexList.css">
+    <title>CRUDdy Cash - <%= budget.name %></title>
+</head>
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <main>
+        <h1><%= budget.name %></h1>
+        <% if(budget.categories.length === 0) { %>
+            <p><em>There are categories for this budget.</em></p>
+        <% } else { %>
+            <h2>Categories</h2>
+            <ul>
+                <% budget.categories.forEach( (category) => { %>
+                    <li>
+                        <a href="/bugets/categories/<%= category._id %>"><%= category.name %></a>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+        <div>
+            <form action="/budgets/<%= budget._id %>/categories/new" method="get">
+                <button type="submit">Create Category</button>
+            </form>
+            <form action="/budgets/<%= budget._id %>/edit" method="get">
+                <button type="submit">Edit</button>
+            </form>
+            <form action="/budgets/<%= budget._id %>?_method=delete" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
