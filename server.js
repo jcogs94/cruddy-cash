@@ -29,6 +29,49 @@ const createEntry = async (categoryId, newEntry) => {
     return foundCategory
 }
 
+// Loops through passed obj to find the array of embedded
+// documents. It then compares the ids of the embedded docs
+// to the given id and returns the found match
+const findEmbeddedDoc = (parent, embeddedId) => {
+    let foundEmbeddedDoc = {}
+    let embeddedArr = []
+    const parentValues = Object.values(parent)
+
+    // Uses nested loops to find the array of objects inside
+    // the parentValues. The initial values of parentValues
+    // returns multiple values other than the data obj, so
+    // a nested childValues obj had to be created to find
+    // the data obj so THAT could be iterated over to find
+    // the embedded array
+    parentValues.forEach( (parentValue) => {
+        if (typeof(parentValue) === 'object') {
+            const childValues = Object.values(parentValue)
+            
+            childValues.forEach( (value) => {
+                if(Array.isArray(value)) {
+                    embeddedArr = value
+                }
+            })
+        }
+    })
+    
+    // Loops through the array of embedded docs and
+    // stores the matched id object for return
+    embeddedArr.forEach( (embeddedDoc) => {
+        if (embeddedDoc.id === embeddedId) {
+            foundEmbeddedDoc = embeddedDoc
+        }
+    })
+
+    // If matching id not found, name is undefined
+    // If not found, returns false, else returns found obj
+    if (foundEmbeddedDoc.name === undefined) {
+        return false
+    } else {
+        return foundEmbeddedDoc
+    }
+}
+
 
 // ================ ROUTES ================== //
 // -------------- HOME PAGE ----------------- //
@@ -131,19 +174,13 @@ app.post('/categories/:categoryId/entries', async (req, res) => {
 app.get('/categories/:categoryId/entries/:entryId', async (req, res) => {
     const foundCategory = await Category.findById(req.params.categoryId)
     
-    // Loops through foundCategory.entries array and finds entry with
-    // matching id
-    let foundEntry = {}
-    foundCategory.entries.forEach( (entry) => {
-        if (entry.id === req.params.entryId) {
-            foundEntry = entry
-        }
-    })
+    // Calls function to find entry in category entry array, returns false
+    // if not found
+    const foundEntry = findEmbeddedDoc(foundCategory, req.params.entryId)
 
-    // If matching id not found, name is undefined
-    // If not found, redirects to category show page,
+    // If matching id not found, redirects to category show page,
     // else, renders entry show page
-    if (foundEntry.name === undefined) {
+    if (foundEntry === false) {
         res.redirect(`/categories/${req.params.categoryId}`)
     } else {
         res.render('entry/show.ejs', {

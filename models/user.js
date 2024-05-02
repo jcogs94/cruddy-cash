@@ -12,9 +12,9 @@ const categorySchema = new mongoose.Schema({
     entries: [entrySchema]
 })
 
-// const budgetSchema = new mongoose.Schema({
+// const budgetMonthSchema = new mongoose.Schema({
 //     year: Number,
-//     monthName: String,
+//     name: String,
 //     incomePlanned: Number,
 //     incomeTotal: Number,
 //     expensesPlanned: Number,
