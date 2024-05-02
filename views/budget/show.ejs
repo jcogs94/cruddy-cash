@@ -6,14 +6,31 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/show.css">
     <link rel="stylesheet" href="../css/indexList.css">
+    <link rel="stylesheet" href="../css/budgetBox.css">
     <title>CRUDdy Cash - <%= budget.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
+        <div class="budget-box-container">
+            <div class="budget-box">
+                <h3>Income</h3>
+                <ul>
+                    <li><b>Planned:</b> $<%= budget.incomePlanned %></li>
+                    <li><b>Total:</b> $<%= budget.incomeTotal %></li>
+                </ul>
+            </div>
+            <div class="budget-box">
+                <h3>Expenses</h3>
+                <ul>
+                    <li><b>Planned:</b> $<%= budget.expensesPlanned %></li>
+                    <li><b>Total:</b> $<%= budget.expensesTotal %></li>
+                </ul>
+            </div>
+        </div>
         <% if(budget.categories.length === 0) { %>
-            <p><em>There are categories for this budget.</em></p>
+            <p><em>There are no categories for this budget.</em></p>
         <% } else { %>
             <h2>Categories</h2>
             <ul>

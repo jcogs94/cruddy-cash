@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>CRUDdy Cash - Edit <%= budget.name %></title>
+</head>
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <main>
+        <h1><%= budget.name %></h1>
+        <form action="/budgets/<%= budget._id %>?_method=put" method="post">
+            <fieldset aria-labelledby="new-entry-legend">
+                <legend name="new-entry-legend">Create Budget</legend>
+                <div>
+                    <label for="year">Year:</label>
+                    <input type="number" name="year" value="<%= budget.year %>">
+                </div>
+                <div>
+                    <label for="month">Month: </label>
+                    <select name="month">
+                        <option value="none"> - select month - </option>
+                        <option value="January" <% if (budget.month === 'January') { %>
+                            selected='selected'
+                        <% } %>
+                        >January</option>
+                        <option value="February" <% if (budget.month === 'February') { %>
+                            selected='selected'
+                        <% } %>
+                        >February</option>
+                        <option value="March" <% if (budget.month === 'March') { %>
+                            selected='selected'
+                        <% } %>
+                        >March</option>
+                        <option value="April" <% if (budget.month === 'April') { %>
+                            selected='selected'
+                        <% } %>
+                        >April</option>
+                        <option value="May" <% if (budget.month === 'May') { %>
+                            selected='selected'
+                        <% } %>
+                        >May</option>
+                        <option value="June" <% if (budget.month === 'June') { %>
+                            selected='selected'
+                        <% } %>
+                        >June</option>
+                        <option value="July" <% if (budget.month === 'July') { %>
+                            selected='selected'
+                        <% } %>
+                        >July</option>
+                        <option value="August" <% if (budget.month === 'August') { %>
+                            selected='selected'
+                        <% } %>
+                        >August</option>
+                        <option value="September" <% if (budget.month === 'September') { %>
+                            selected='selected'
+                        <% } %>
+                        >September</option>
+                        <option value="October" <% if (budget.month === 'October') { %>
+                            selected='selected'
+                        <% } %>
+                        >October</option>
+                        <option value="November" <% if (budget.month === 'November') { %>
+                            selected='selected'
+                        <% } %>
+                        >November</option>
+                        <option value="December" <% if (budget.month === 'December') { %>
+                            selected='selected'
+                        <% } %>
+                        >December</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="incomePlanned">Income Planned:</label>
+                    <input type="number" name="incomePlanned" value="<%= budget.incomePlanned %>">
+                </div>
+                <div>
+                    <label for="expensesPlanned">Expenses Planned:</label>
+                    <input type="number" name="expensesPlanned" value="<%= budget.expensesPlanned %>">
+                </div>
+                <button type="submit">Create</button>
+            </fieldset>
+        </form>
+    </main>
+</body>
+</html>
