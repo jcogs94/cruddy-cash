@@ -91,9 +91,9 @@ app.get('/budgets/:budgetId', async (req, res) => {
 })
 
 app.get('/budgets/:budgetId/edit', async (req, res) => {
-    const foundCategory = await Category.findById(req.params.categoryId)
-    res.render('category/edit.ejs', {
-        category: foundCategory
+    const foundBudget = await Budget.findById(req.params.budgetId)
+    res.render('budget/edit.ejs', {
+        budget: foundBudget
     })
 })
 
