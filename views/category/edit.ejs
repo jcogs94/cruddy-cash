@@ -31,6 +31,10 @@
                         <% } %>>
                     </div>
                 </div>
+                <div class="two-line-input">
+                    <label for="planned">How much do you plan for this month?</label>
+                    <input type="number" name="planned" step=".01" value="<%= category.planned %>">
+                </div>
                 <button type="submit">Update</button>
             </fieldset>
         </form>

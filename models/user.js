@@ -9,6 +9,8 @@ const entrySchema = new mongoose.Schema({
 const categorySchema = new mongoose.Schema({
     name: String,
     isIncome: Boolean,
+    planned: Number,
+    total: Number,
     entries: [entrySchema]
 })
 

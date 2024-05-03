@@ -17,7 +17,7 @@ app.use(methodOverride('_method'))
 
 
 // =============== FUNCTIONS ================ //
-// Updates sub-docs based on passed obj
+// Updates sub-docs based on passed parent model
 const updateChild = async (parent, child, updatedChild) => {
     // Obtains keys for updated values    
     const childKeys = Object.keys(updatedChild)
@@ -29,6 +29,45 @@ const updateChild = async (parent, child, updatedChild) => {
 
     // Saves changes at the parent level
     await parent.save()
+}
+
+// Updates all planned and total values for a budget
+const updateBudget = async (budgetId) => {
+    const foundBudget = await Budget.findById(budgetId)
+    let newIncomePlanned = 0
+    let newIncomeTotal = 0
+    let newExpensesPlanned = 0
+    let newExpensesTotal = 0
+
+    foundBudget.categories.forEach( (category) => {
+        let total = 0
+        
+        // Adds each entry amount to a total for
+        // that category
+        category.entries.forEach( (entry) => {
+            total += entry.amount
+        })
+        
+        // Saves total value for category
+        category.total = total
+
+        // Adds to the planned and total values
+        // based on income/expense
+        if (category.isIncome) {
+            newIncomePlanned += category.planned
+            newIncomeTotal += category.total
+        } else {
+            newExpensesPlanned += category.planned
+            newExpensesTotal += category.total
+        }
+    })
+
+    // Updates all new values and saves
+    foundBudget.incomePlanned = newIncomePlanned
+    foundBudget.incomeTotal = newIncomeTotal
+    foundBudget.expensesPlanned = newExpensesPlanned
+    foundBudget.expensesTotal = newExpensesTotal
+    await foundBudget.save()
 }
 
 
@@ -271,10 +310,18 @@ app.post('/budgets/:budgetId/categories', async (req, res) => {
         newCategory.isIncome = false
     }
     
-    // Pushes new entry to entry array and saves the category
+    // Changes String input to Number and inits total
+    newCategory.planned = parseFloat(newCategory.planned)
+    newCategory.total = 0
+
+    // Pushes new category to category array and saves the category
     // changes
     foundBudget.categories.push(newCategory)
     await foundBudget.save()
+
+    // Updates planned and total values on budget with
+    // new planned amounts added by the user
+    await updateBudget(foundBudget._id)
     
     res.redirect(`/budgets/${req.params.budgetId}`)
 })
@@ -311,7 +358,16 @@ app.put('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
         updatedCategory.isIncome = false
     }
 
+    // Changes String input to Number
+    updatedCategory.planned = parseFloat(updatedCategory.planned)
+
+    // Updates budget with new values added by user
     updateChild(foundBudget, foundCategory, updatedCategory)
+
+    // Updates planned and total values on budget with
+    // new planned amounts added by the user
+    await updateBudget(foundBudget._id)
+
     res.redirect(`/budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
 
@@ -320,6 +376,10 @@ app.delete('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
     
     foundBudget.categories.pull(req.params.categoryId)
     await foundBudget.save()
+
+    // Updates planned and total values after category
+    // deleted by user
+    await updateBudget(foundBudget)
     
     res.redirect(`/budgets/${req.params.budgetId}`)
 })
@@ -368,6 +428,10 @@ app.post('/budgets/:budgetId/categories/:categoryId/entries', async (req, res) =
     // changes
     foundCategory.entries.push(newEntry)
     await foundBudget.save()
+
+    // Updates budget planned and total values with entry added
+    // by user
+    await updateBudget(foundBudget)
     
     res.redirect(`/budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
@@ -406,7 +470,13 @@ app.put('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (req
     updatedEntry.postedDay = parseInt(updatedEntry.postedDay)
     updatedEntry.amount = parseInt(updatedEntry.amount)
     
-    updateChild(foundBudget, foundEntry, updatedEntry)
+    // Updates budget with changes made to entry
+    await updateChild(foundBudget, foundEntry, updatedEntry)
+
+    // Updates budget planned and total values with entry
+    // updated by user
+    updateBudget(foundBudget)
+
     res.redirect(`/budgets/${foundBudget._id}/categories/${foundCategory._id}/entries/${foundEntry._id}`)
 })
 
@@ -416,6 +486,10 @@ app.delete('/budgets/:budgetId/categories/:categoryId/entries/:entryId', async (
     
     foundCategory.entries.pull(req.params.entryId)
     await foundBudget.save()
+
+    // Updates budget planned and total values with entry
+    // deleted by user
+    await updateBudget(foundBudget)
     
     res.redirect(`/budgets/${foundBudget._id}/categories/${foundCategory._id}`)
 })

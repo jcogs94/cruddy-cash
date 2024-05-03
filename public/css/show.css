@@ -8,3 +8,8 @@ div {
     flex-direction: row;
     gap: 10px;
 }
+
+.category-info {
+    flex-direction: column;
+    align-items: center;
+}
