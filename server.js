@@ -2,18 +2,29 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const express = require('express')
+const session = require('express-session')
 const app = express()
+
+const authController = require('./controllers/auth.js')
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.MONGODB_URI)
 
 const methodOverride = require('method-override')
 
-const Budget = require('./models/user.js')
+const Budget = require('./models/budget.js')
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
 app.use(methodOverride('_method'))
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true
+    })
+)
+app.use('/auth', authController)
 
 
 // =============== FUNCTIONS ================ //
@@ -74,7 +85,9 @@ const updateBudget = async (budgetId) => {
 // ================ ROUTES ================== //
 // -------------- HOME PAGE ----------------- //
 app.get('/', (req, res) => {
-    res.render('index.ejs')
+    res.render('index.ejs', {
+        user: req.session.user
+    })
 })
 
 // ------------------ BUDGETS --------------- //

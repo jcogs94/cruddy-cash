@@ -1,38 +1,16 @@
 const mongoose = require('mongoose')
 
-const entrySchema = new mongoose.Schema({
-    name: String,
-    postedDay: Number,
-    amount: Number
+const userSchema = mongoose.Schema({
+    email: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
 })
 
-const categorySchema = new mongoose.Schema({
-    name: String,
-    isIncome: Boolean,
-    planned: Number,
-    total: Number,
-    entries: [entrySchema]
-})
+const User = mongoose.model('User', userSchema)
 
-const budgetSchema = new mongoose.Schema({
-    year: Number,
-    month: String,
-    monthNumStr: String,
-    name: String,
-    incomePlanned: Number,
-    incomeTotal: Number,
-    expensesPlanned: Number,
-    expensesTotal: Number,
-    categories: [categorySchema]
-})
-
-// const userSchema = new mongoose.Schema({
-//     name: String,
-//     budgets: [budgetSchema]
-// })
-
-// const User = mongoose.model('User', userSchema)
-// module.exports = User
-
-const Budget = mongoose.model('Budget', budgetSchema)
-module.exports = Budget
+module.exports = User

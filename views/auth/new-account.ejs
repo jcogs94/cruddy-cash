@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <title>CRUDdy Cash - New Account</title>
+</head>
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <main>
+        <h1>New Account</h1>
+        <form action="/auth/new-account" method="post">
+            <fieldset aria-labelledby="new-account-legend" id="create-account-fs">
+                <legend name="new-account-legend">Sign Up</legend>
+                <label for="email">Email:</label>
+                <input type="email" name="email">
+                <label for="password">Password:</label>
+                <input type="password" name="password">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" name="confirmPassword">
+                <button type="submit" id="create-account">Create Account</button>
+            </fieldset>
+        </form>
+    </main>
+</body>
+</html>
