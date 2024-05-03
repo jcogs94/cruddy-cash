@@ -264,5 +264,130 @@ router.delete('/:budgetId', async (req, res) => {
     res.redirect('/user-budgets')
 })
 
+// ---------------- CATEGORIES -------------- //
+router.get('/categories', async (req, res) => {
+    const allCategories = await Category.find()
+    
+    // Define arrays for income and expense based on
+    // isIncome
+    let incomeCategories = []
+    let expenseCategories = []
+    
+    // Loop through allCategories and push accordingly
+    // to sort by isIncome
+    allCategories.forEach( (category) => {
+        if(category.isIncome) {
+            incomeCategories.push(category)
+        } else {
+            expenseCategories.push(category)
+        }
+    })
+    
+    res.render('./category/index.ejs', {
+        incomeCategories: incomeCategories,
+        expenseCategories: expenseCategories
+    })
+})
+
+router.get('/:budgetId/categories/new', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    res.render('category/new.ejs', {
+        budget: foundBudget
+    })
+})
+
+router.post('/:budgetId/categories', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    let newCategory = req.body
+    
+    // Changes isIncome type to boolean
+    if(newCategory.isIncome === 'true') {
+        newCategory.isIncome = true
+    } else if(newCategory.isIncome === 'false') {
+        newCategory.isIncome = false
+    }
+    
+    // Changes String input to Number and inits total
+    newCategory.planned = parseFloat(newCategory.planned)
+    newCategory.total = 0
+
+    // Creates new category and updates the newCategory obj (for ref
+    // in redirect), then pushes it to category array and saves the
+    // category changes
+    newCategory = foundBudget.categories.create(newCategory)
+    foundBudget.categories.push(newCategory)
+    await foundBudget.save()
+
+    // Updates planned and total values on budget with
+    // new planned amounts added by the user
+    await updateBudget(foundBudget._id)
+    
+    res.redirect(`/budgets/${req.params.budgetId}/categories/${newCategory._id}`)
+})
+
+router.get('/:budgetId/categories/:categoryId', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+
+    res.render('category/show.ejs', {
+        budget: foundBudget,
+        category: foundCategory
+    })
+})
+
+router.get('/:budgetId/categories/:categoryId/edit', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    
+    res.render('category/edit.ejs', {
+        budget: foundBudget,
+        category: foundCategory
+    })
+})
+
+router.put('/:budgetId/categories/:categoryId', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const updatedCategory = req.body
+    
+    // Changes isIncome type to boolean
+    if(updatedCategory.isIncome === 'true') {
+        updatedCategory.isIncome = true
+    } else if(updatedCategory.isIncome === 'false') {
+        updatedCategory.isIncome = false
+    }
+
+    // Changes String input to Number
+    updatedCategory.planned = parseFloat(updatedCategory.planned)
+
+    // Updates budget with new values added by user
+    updateChild(foundBudget, foundCategory, updatedCategory)
+
+    // Updates planned and total values on budget with
+    // new planned amounts added by the user
+    await updateBudget(foundBudget._id)
+
+    res.redirect(`/budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
+})
+
+router.delete('/:budgetId/categories/:categoryId', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    
+    foundBudget.categories.pull(req.params.categoryId)
+    await foundBudget.save()
+
+    // Updates planned and total values after category
+    // deleted by user
+    await updateBudget(foundBudget)
+    
+    res.redirect(`/budgets/${req.params.budgetId}`)
+})
+
 
 module.exports = router
