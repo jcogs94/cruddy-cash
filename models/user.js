@@ -9,12 +9,15 @@ const entrySchema = new mongoose.Schema({
 const categorySchema = new mongoose.Schema({
     name: String,
     isIncome: Boolean,
+    planned: Number,
+    total: Number,
     entries: [entrySchema]
 })
 
 const budgetSchema = new mongoose.Schema({
     year: Number,
     month: String,
+    monthNumStr: String,
     name: String,
     incomePlanned: Number,
     incomeTotal: Number,

@@ -12,11 +12,15 @@
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h2><%= category.name %> (<% if(category.isIncome) { %>
-            income
-        <% } else { %>
-            expense
-        <% } %>)</h2>
+        <div class="category-info">
+            <h2><%= category.name %> (<% if(category.isIncome) { %>
+                income
+            <% } else { %>
+                expense
+            <% } %>)</h2>
+            <p><b>Planned:</b> $<%= category.planned %></p>
+            <p><b>Total:</b> $<%= category.total %></p>
+        </div>
         <% if(category.entries.length === 0) { %>
             <p><em>There are no entries for this category.</em></p>
         <% } else { %>
