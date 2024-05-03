@@ -2,7 +2,7 @@ const dotenv = require('dotenv')
 const express = require('express')
 const session = require('express-session')
 const authController = require('./controllers/auth.js')
-const methodOverride = require('method-override')
+const budgetController = require('./controllers/budgets.js')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')
 const isSignedIn = require('./middleware/is-signed-in.js')
@@ -16,7 +16,6 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
-app.use(methodOverride('_method'))
 app.use(
     session({
         secret: process.env.SESSION_SECRET,
@@ -29,6 +28,8 @@ app.use(
 )
 app.use(passUserToView)
 app.use('/auth', authController)
+app.use('/user-budgets', budgetController)
+
 
 
 // =============== FUNCTIONS ================ //
@@ -97,194 +98,6 @@ app.get('/dashboard', isSignedIn, (req, res) => {
 })
 
 // ------------------ BUDGETS --------------- //
-app.get('/budgets', async (req, res) => {
-    const allBudgets = await Budget.find()
-    
-    let budgetsByYear = {}
-    
-    // Loop through allCategories and push accordingly
-    // to sort by isIncome
-    allBudgets.forEach( (budget) => {
-        if(budgetsByYear[budget.year] === undefined) {
-            budgetsByYear[budget.year] = []
-        }
-        
-        budgetsByYear[budget.year].push(budget)
-    })
-    
-    const budgetYears = Object.keys(budgetsByYear)
-
-    res.render('./budget/index.ejs', {
-        budgets: budgetsByYear,
-        years: budgetYears
-    })
-})
-
-app.get('/budgets/new', (req, res) => {
-    res.render('budget/new.ejs')
-})
-
-app.post('/budgets', async (req, res) => {
-    let newBudget = req.body
-    
-    // Splits the "month" input type into month and year
-    let monthInput = newBudget.month.split('-')
-    let monthNumStr = monthInput.pop()
-    let month = parseInt(monthNumStr)
-    newBudget.year = parseInt(monthInput.pop())
-    
-    // Changes the month Number to a String
-    switch (month) {
-        case 1:
-            month = 'January'
-            break;
-        case 2:
-            month = 'February'
-            break;
-        case 3:
-            month = 'March'
-            break;
-        case 4:
-            month = 'April'
-            break;
-        case 5:
-            month = 'May'
-            break;
-        case 6:
-            month = 'June'
-            break;
-        case 7:
-            month = 'July'
-            break;
-        case 8:
-            month = 'August'
-            break;
-        case 9:
-            month = 'September'
-            break;
-        case 10:
-            month = 'October'
-            break;
-        case 11:
-            month = 'November'
-            break;
-        case 12:
-            month = 'December'
-            break;
-    }
-    
-    // Adds String month to newBudget and creates a 
-    // name for the budget based on year and month
-    newBudget.month = month
-    newBudget.monthNumStr = monthNumStr
-    newBudget.name = newBudget.month + ', ' + newBudget.year
-
-    // Declarations for model compliance, sets init
-    // values all to 0, to be updated as user inputs
-    // categories and entries
-    newBudget.incomePlanned = 0
-    newBudget.expensesPlanned = 0
-    newBudget.incomeTotal = 0
-    newBudget.expensesTotal = 0
-    
-    newBudget = await Budget.create(newBudget)
-    res.redirect(`/budgets/${newBudget._id}`)
-})
-
-app.get('/budgets/:budgetId', async (req, res) => {
-    const foundBudget = await Budget.findById(req.params.budgetId)
-
-    const budgetCategories = foundBudget.categories
-    let incomeCategories = []
-    let expenseCategories = []
-
-    // Loop through budgetCategories and push accordingly
-    // to sort by isIncome
-    budgetCategories.forEach( (category) => {
-        if(category.isIncome) {
-            incomeCategories.push(category)
-        } else {
-            expenseCategories.push(category)
-        }
-    })
-
-    res.render('budget/show.ejs', {
-        budget: foundBudget,
-        incomeCategories: incomeCategories,
-        expenseCategories: expenseCategories
-    })    
-})
-
-app.get('/budgets/:budgetId/edit', async (req, res) => {
-    const foundBudget = await Budget.findById(req.params.budgetId)
-    res.render('budget/edit.ejs', {
-        budget: foundBudget
-    })
-})
-
-app.put('/budgets/:budgetId', async (req, res) => {
-    const updatedBudget = req.body
-    
-    // Splits the "month" input type into month and year
-    let monthInput = updatedBudget.month.split('-')
-    let monthNumStr = monthInput.pop()
-    let month = parseInt(monthNumStr)
-    updatedBudget.year = parseInt(monthInput.pop())
-    
-    // Changes the month Number to a String
-    switch (month) {
-        case 1:
-            month = 'January'
-            break;
-        case 2:
-            month = 'February'
-            break;
-        case 3:
-            month = 'March'
-            break;
-        case 4:
-            month = 'April'
-            break;
-        case 5:
-            month = 'May'
-            break;
-        case 6:
-            month = 'June'
-            break;
-        case 7:
-            month = 'July'
-            break;
-        case 8:
-            month = 'August'
-            break;
-        case 9:
-            month = 'September'
-            break;
-        case 10:
-            month = 'October'
-            break;
-        case 11:
-            month = 'November'
-            break;
-        case 12:
-            month = 'December'
-            break;
-    }
-    
-    // Adds String month to newBudget and creates a 
-    // name for the budget based on year and month
-    updatedBudget.month = month
-    updatedBudget.monthNumStr = monthNumStr
-    updatedBudget.name = updatedBudget.month + ', ' + updatedBudget.year
-    
-    await Budget.findByIdAndUpdate(req.params.budgetId, updatedBudget)
-    res.redirect('/budgets')
-})
-
-app.delete('/budgets/:budgetId', async (req, res) => {
-    await Budget.findByIdAndDelete(req.params.budgetId)
-    res.redirect('/budgets')
-})
 
 // ---------------- CATEGORIES -------------- //
 app.get('/categories', async (req, res) => {
