@@ -7,9 +7,20 @@
     <title>CRUDdy Cash</title>
 </head>
 <body>
-    <%- include('./partials/nav.ejs') %>
+    <%- include('./partials/home-nav.ejs') %>
     <main>
         <h1>Home Page</h1>
+        <% if (user) { %>
+            <h2>Welcome to the app, <%= user.userEmail %>!</h2>
+            <p>
+                <a href="/auth/sign-out">Sign Out</a>
+            </p>
+        <% } else { %>
+            <h2>Welcome to the app, guest.</h2>
+            <p>
+                <a href="/auth/new-account">Sign up</a> or <a href="/auth/sign-in">sign in</a>.
+            </p>
+        <% } %>
     </main>
 </body>
 </html>

@@ -41,8 +41,7 @@ fieldset {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding: 10px 25px 15px 25px;
 }
 
 fieldset > div {
@@ -58,6 +57,11 @@ fieldset > button {
     margin-top: 10px;
 }
 
+#create-account {
+    width: 130px;
+    padding: 5px 10px;
+}
+
 button {
     cursor: pointer;
 }
@@ -65,3 +69,13 @@ button {
 .two-line-input {
     flex-direction: column;
 }
+
+/* .input {
+    display: flex;
+    flex-direction: column;
+} */
+
+/* #create-account-fs {
+    display: block;
+
+} */

@@ -8,7 +8,7 @@
     <title>CRUDdy Cash - View Budgets</title>
 </head>
 <body>
-    <%- include('../partials/nav') %>
+    <%- include('../partials/nav.ejs') %>
     <main>
         <h1>All Budgets</h1>
         <% if(years.length > 0) { %>
@@ -18,7 +18,7 @@
                     <ul class="list">
                         <% budgets[year].forEach( (budget) => { %>
                             <li>
-                                <a href="/budgets/<%= budget._id %>"><%= budget.month %></a>
+                                <a href="/user-budgets/<%= budget._id %>"><%= budget.month %></a>
                             </li>
                         <% }) %>
                     </ul>

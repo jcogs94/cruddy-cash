@@ -12,7 +12,7 @@
         <h1><%= budget.name %></h1>
         <h2><%= category.name %></h2>
         <h3><%= entry.name %></h3>
-        <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>?_method=put" method="post">
+        <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>?_method=put" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Edit</legend>
                 <div>

@@ -26,13 +26,25 @@ const budgetSchema = new mongoose.Schema({
     categories: [categorySchema]
 })
 
-// const userSchema = new mongoose.Schema({
-//     name: String,
-//     budgets: [budgetSchema]
-// })
+const userSchema = new mongoose.Schema({
+    email: {
+        type: String,
+        required: true
+    },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    budgets: [budgetSchema]
+})
 
-// const User = mongoose.model('User', userSchema)
-// module.exports = User
-
-const Budget = mongoose.model('Budget', budgetSchema)
-module.exports = Budget
+const User = mongoose.model('User', userSchema)
+module.exports = User

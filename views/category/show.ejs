@@ -28,22 +28,22 @@
             <ul>
                 <% category.entries.forEach( (entry) => { %>
                     <li>
-                        <a href="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>"><b><%= entry.name %>:</b> $<%= entry.amount %></a>
+                        <a href="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>"><b><%= entry.name %>:</b> $<%= entry.amount %></a>
                     </li>
                 <% }) %>
             </ul>
         <% } %>
         <div>
-            <form action="/budgets/<%= budget._id %>" method="get">
+            <form action="/user-budgets/<%= budget._id %>" method="get">
                 <button type="submit">Go Back</button>
             </form>
-            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/entries/new" method="get">
+            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/new" method="get">
                 <button type="submit">Create Entry</button>
             </form>
-            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>/edit" method="get">
+            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/budgets/<%= budget._id %>/categories/<%= category._id %>?_method=delete" method="post">
+            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>
