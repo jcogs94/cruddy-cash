@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const methodOverride = require('method-override')
+const isSignedIn = require('../middleware/is-signed-in.js')
 const User = require('../models/user.js')
 
 router.use(methodOverride('_method'))
@@ -63,7 +64,7 @@ const updateBudget = async (userId, budgetId) => {
 
 
 // ================= ROUTES ================ //
-router.get('/', async (req, res) => {
+router.get('/', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     let budgetsByYear = {}
     
@@ -85,11 +86,11 @@ router.get('/', async (req, res) => {
     })
 })
 
-router.get('/new', (req, res) => {
+router.get('/new', isSignedIn, (req, res) => {
     res.render('budget/new.ejs')
 })
 
-router.post('/', async (req, res) => {
+router.post('/', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     let newBudget = req.body
     
@@ -160,7 +161,7 @@ router.post('/', async (req, res) => {
     res.redirect(`/user-budgets/${newBudget._id}`)
 })
 
-router.get('/:budgetId', async (req, res) => {
+router.get('/:budgetId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
 
@@ -185,7 +186,7 @@ router.get('/:budgetId', async (req, res) => {
     })
 })
 
-router.get('/:budgetId/edit', async (req, res) => {
+router.get('/:budgetId/edit', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     res.render('budget/edit.ejs', {
@@ -193,7 +194,7 @@ router.get('/:budgetId/edit', async (req, res) => {
     })
 })
 
-router.put('/:budgetId', async (req, res) => {
+router.put('/:budgetId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     const updatedBudget = req.body
@@ -256,7 +257,7 @@ router.put('/:budgetId', async (req, res) => {
     res.redirect('/user-budgets')
 })
 
-router.delete('/:budgetId', async (req, res) => {
+router.delete('/:budgetId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     
     user.budgets.pull(req.params.budgetId)
@@ -266,7 +267,7 @@ router.delete('/:budgetId', async (req, res) => {
 })
 
 // ---------------- CATEGORIES -------------- //
-router.get('/categories', async (req, res) => {
+router.get('/categories', isSignedIn, async (req, res) => {
     const allCategories = await Category.find()
     
     // Define arrays for income and expense based on
@@ -290,7 +291,7 @@ router.get('/categories', async (req, res) => {
     })
 })
 
-router.get('/:budgetId/categories/new', async (req, res) => {
+router.get('/:budgetId/categories/new', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     res.render('category/new.ejs', {
@@ -298,7 +299,7 @@ router.get('/:budgetId/categories/new', async (req, res) => {
     })
 })
 
-router.post('/:budgetId/categories', async (req, res) => {
+router.post('/:budgetId/categories', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     let newCategory = req.body
@@ -328,7 +329,7 @@ router.post('/:budgetId/categories', async (req, res) => {
     res.redirect(`/user-budgets/${req.params.budgetId}/categories/${newCategory._id}`)
 })
 
-router.get('/:budgetId/categories/:categoryId', async (req, res) => {
+router.get('/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     const foundCategory = foundBudget.categories.id(req.params.categoryId)
@@ -339,7 +340,7 @@ router.get('/:budgetId/categories/:categoryId', async (req, res) => {
     })
 })
 
-router.get('/:budgetId/categories/:categoryId/edit', async (req, res) => {
+router.get('/:budgetId/categories/:categoryId/edit', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     const foundCategory = foundBudget.categories.id(req.params.categoryId)
@@ -350,7 +351,7 @@ router.get('/:budgetId/categories/:categoryId/edit', async (req, res) => {
     })
 })
 
-router.put('/:budgetId/categories/:categoryId', async (req, res) => {
+router.put('/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     const foundCategory = foundBudget.categories.id(req.params.categoryId)
@@ -376,7 +377,7 @@ router.put('/:budgetId/categories/:categoryId', async (req, res) => {
     res.redirect(`/user-budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
 
-router.delete('/:budgetId/categories/:categoryId', async (req, res) => {
+router.delete('/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     
@@ -388,6 +389,122 @@ router.delete('/:budgetId/categories/:categoryId', async (req, res) => {
     await updateBudget(user._id, foundBudget._id)
     
     res.redirect(`/user-budgets/${req.params.budgetId}`)
+})
+
+// ---------------- ENTRIES ----------------- //
+router.get('/entries', isSignedIn, async (req, res) => {
+    const allEntries = await Entry.find()
+
+    // Sorts all entries into arrays by each postedDay value
+    let entriesByDay = {}
+    allEntries.forEach( (entry) => {
+        // Creates array if there isn't one for that postedDay
+        if (entriesByDay[entry.postedDay] === undefined) {
+            entriesByDay[entry.postedDay] = []
+        }
+
+        // Adds entry to array with key value of postedDay
+        entriesByDay[entry.postedDay].push(entry)
+    })
+    
+    res.render('entry/index.ejs', {
+        entries: entriesByDay,
+        entriesKeys: Object.keys(entriesByDay)
+    })
+})
+
+router.get('/:budgetId/categories/:categoryId/entries/new', isSignedIn, async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    res.render('entry/new.ejs', {
+        budget: foundBudget,
+        category: foundCategory
+    })
+})
+
+router.post('/:budgetId/categories/:categoryId/entries', isSignedIn, async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const newEntry = req.body
+    
+    // Change input strings to Nums
+    newEntry.postedDay = parseInt(newEntry.postedDay)
+    newEntry.amount = parseInt(newEntry.amount)
+    
+    // Pushes new entry to entry array and saves the category
+    // changes
+    foundCategory.entries.push(newEntry)
+    await user.save()
+
+    // Updates budget planned and total values with entry added
+    // by user
+    await updateBudget(user._id, foundBudget._id)
+    
+    res.redirect(`/user-budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
+})
+
+router.get('/:budgetId/categories/:categoryId/entries/:entryId', isSignedIn, async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const foundEntry = foundCategory.entries.id(req.params.entryId)
+
+    res.render('entry/show.ejs', {
+        budget: foundBudget,
+        category: foundCategory,
+        entry: foundEntry
+    })
+})
+
+router.get('/:budgetId/categories/:categoryId/entries/:entryId/edit', isSignedIn, async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const foundEntry = foundCategory.entries.id(req.params.entryId)
+
+    res.render('entry/edit.ejs', {
+        budget: foundBudget,
+        category: foundCategory,
+        entry: foundEntry
+    })
+})
+
+router.put('/:budgetId/categories/:categoryId/entries/:entryId', isSignedIn, async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const foundEntry = foundCategory.entries.id(req.params.entryId)
+    const updatedEntry = req.body
+    
+    // Change input strings to Nums
+    updatedEntry.postedDay = parseInt(updatedEntry.postedDay)
+    updatedEntry.amount = parseInt(updatedEntry.amount)
+    
+    // Updates budget with changes made to entry
+    await updateChild(user, foundEntry, updatedEntry)
+
+    // Updates budget planned and total values with entry
+    // updated by user
+    updateBudget(user._id, foundBudget._id)
+
+    res.redirect(`/user-budgets/${foundBudget._id}/categories/${foundCategory._id}/entries/${foundEntry._id}`)
+})
+
+router.delete('/:budgetId/categories/:categoryId/entries/:entryId', isSignedIn, async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
+    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    
+    foundCategory.entries.pull(req.params.entryId)
+    await user.save()
+
+    // Updates budget planned and total values with entry
+    // deleted by user
+    await updateBudget(user._id, foundBudget._id)
+    
+    res.redirect(`/user-budgets/${foundBudget._id}/categories/${foundCategory._id}`)
 })
 
 
