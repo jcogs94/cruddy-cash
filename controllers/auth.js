@@ -1,8 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
 const bcrypt = require('bcrypt')
-
 const User = require('../models/user.js')
 
 
@@ -26,8 +24,19 @@ router.post('/new-account', async (req, res) => {
     req.body.password = hashedPassword
 
     const user = await User.create(req.body)
-    
-    res.send(`Signed up at ${user.email}!\nPassword: ${user.password}`)
+    console.log(user)
+
+    req.session.user = {
+        _id: user._id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        budgets: user.budgets
+    }
+
+    req.session.save(() => {
+        res.redirect('/dashboard')
+    })
 })
 
 router.get('/sign-in', async (req, res) => {
@@ -35,33 +44,38 @@ router.get('/sign-in', async (req, res) => {
 })
 
 router.post('/sign-in', async (req, res) => {
-    const emailInDatabase = await User.findOne({ email: req.body.email })
+    const foundUser = await User.findOne({ email: req.body.email })
 
-    if (!emailInDatabase) {
+    if (!foundUser) {
         return res.send('Email not registered')
     }
 
     const validPassword = bcrypt.compareSync(
         req.body.password,
-        emailInDatabase.password
+        foundUser.password
     )
 
     if (!validPassword) {
         return res.send("Invalid password.")
     }
 
-    // console.log(emailInDatabase.);
-
     req.session.user = {
-        username: emailInDatabase.email,
+        _id: foundUser._id,
+        email: foundUser.email,
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+        budgets: foundUser.budgets
     }
 
-    res.redirect('/')
+    req.session.save(() => {
+        res.redirect('/dashboard')
+    })
 })
 
-router.get('/sign-out', (req, res) => {
-    req.session.destroy()
-    res.redirect('/')
+router.get('/sign-out', async (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/')
+    })
 })
 
 

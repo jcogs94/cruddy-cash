@@ -1,18 +1,18 @@
 const dotenv = require('dotenv')
-dotenv.config()
-
 const express = require('express')
 const session = require('express-session')
-const app = express()
-
 const authController = require('./controllers/auth.js')
-
-const mongoose = require('mongoose')
-mongoose.connect(process.env.MONGODB_URI)
-
 const methodOverride = require('method-override')
+const mongoose = require('mongoose')
+const MongoStore = require('connect-mongo')
+const isSignedIn = require('./middleware/is-signed-in.js')
+const passUserToView = require('./middleware/pass-user-to-view.js')
+const User = require('./models/user.js')
 
-const Budget = require('./models/budget.js')
+const app = express()
+dotenv.config()
+
+mongoose.connect(process.env.MONGODB_URI)
 
 app.use(express.urlencoded({ extended: false }))
 app.use(express.static('public'))
@@ -21,9 +21,13 @@ app.use(
     session({
         secret: process.env.SESSION_SECRET,
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
+        store: MongoStore.create({
+            mongoUrl: process.env.MONGODB_URI
+        }),
     })
 )
+app.use(passUserToView)
 app.use('/auth', authController)
 
 
@@ -85,9 +89,11 @@ const updateBudget = async (budgetId) => {
 // ================ ROUTES ================== //
 // -------------- HOME PAGE ----------------- //
 app.get('/', (req, res) => {
-    res.render('index.ejs', {
-        user: req.session.user
-    })
+    res.render('index.ejs')
+})
+
+app.get('/dashboard', isSignedIn, (req, res) => {
+    res.render('./user/index.ejs')
 })
 
 // ------------------ BUDGETS --------------- //
