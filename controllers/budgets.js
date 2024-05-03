@@ -22,8 +22,9 @@ const updateChild = async (parent, child, updatedChild) => {
 }
 
 // Updates all planned and total values for a budget
-const updateBudget = async (budgetId) => {
-    const foundBudget = await Budget.findById(budgetId)
+const updateBudget = async (userId, budgetId) => {
+    const user = await User.findById(userId)
+    const foundBudget = user.budgets.id(budgetId)
     let newIncomePlanned = 0
     let newIncomeTotal = 0
     let newExpensesPlanned = 0
@@ -57,7 +58,7 @@ const updateBudget = async (budgetId) => {
     foundBudget.incomeTotal = newIncomeTotal
     foundBudget.expensesPlanned = newExpensesPlanned
     foundBudget.expensesTotal = newExpensesTotal
-    await foundBudget.save()
+    await user.save()
 }
 
 
@@ -318,13 +319,13 @@ router.post('/:budgetId/categories', async (req, res) => {
     // category changes
     newCategory = foundBudget.categories.create(newCategory)
     foundBudget.categories.push(newCategory)
-    await foundBudget.save()
+    await user.save()
 
     // Updates planned and total values on budget with
     // new planned amounts added by the user
-    await updateBudget(foundBudget._id)
+    await updateBudget(user._id, foundBudget._id)
     
-    res.redirect(`/budgets/${req.params.budgetId}/categories/${newCategory._id}`)
+    res.redirect(`/user-budgets/${req.params.budgetId}/categories/${newCategory._id}`)
 })
 
 router.get('/:budgetId/categories/:categoryId', async (req, res) => {
