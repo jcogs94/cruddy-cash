@@ -367,13 +367,13 @@ router.put('/:budgetId/categories/:categoryId', async (req, res) => {
     updatedCategory.planned = parseFloat(updatedCategory.planned)
 
     // Updates budget with new values added by user
-    updateChild(foundBudget, foundCategory, updatedCategory)
+    updateChild(user, foundCategory, updatedCategory)
 
     // Updates planned and total values on budget with
     // new planned amounts added by the user
-    await updateBudget(foundBudget._id)
+    await updateBudget(user._id, foundBudget._id)
 
-    res.redirect(`/budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
+    res.redirect(`/user-budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
 
 router.delete('/:budgetId/categories/:categoryId', async (req, res) => {
