@@ -381,13 +381,13 @@ router.delete('/:budgetId/categories/:categoryId', async (req, res) => {
     const foundBudget = user.budgets.id(req.params.budgetId)
     
     foundBudget.categories.pull(req.params.categoryId)
-    await foundBudget.save()
+    await user.save()
 
     // Updates planned and total values after category
     // deleted by user
-    await updateBudget(foundBudget)
+    await updateBudget(user._id, foundBudget._id)
     
-    res.redirect(`/budgets/${req.params.budgetId}`)
+    res.redirect(`/user-budgets/${req.params.budgetId}`)
 })
 
 
