@@ -31,62 +31,6 @@ app.use('/auth', authController)
 app.use('/user-budgets', budgetController)
 
 
-
-// =============== FUNCTIONS ================ //
-// Updates sub-docs based on passed parent model
-const updateChild = async (parent, child, updatedChild) => {
-    // Obtains keys for updated values    
-    const childKeys = Object.keys(updatedChild)
-
-    // Loops through keys and updates sub-doc's values
-    childKeys.forEach( (key) => {
-        child[key] = updatedChild[key]
-    })
-
-    // Saves changes at the parent level
-    await parent.save()
-}
-
-// Updates all planned and total values for a budget
-const updateBudget = async (budgetId) => {
-    const foundBudget = await Budget.findById(budgetId)
-    let newIncomePlanned = 0
-    let newIncomeTotal = 0
-    let newExpensesPlanned = 0
-    let newExpensesTotal = 0
-
-    foundBudget.categories.forEach( (category) => {
-        let total = 0
-        
-        // Adds each entry amount to a total for
-        // that category
-        category.entries.forEach( (entry) => {
-            total += entry.amount
-        })
-        
-        // Saves total value for category
-        category.total = total
-
-        // Adds to the planned and total values
-        // based on income/expense
-        if (category.isIncome) {
-            newIncomePlanned += category.planned
-            newIncomeTotal += category.total
-        } else {
-            newExpensesPlanned += category.planned
-            newExpensesTotal += category.total
-        }
-    })
-
-    // Updates all new values and saves
-    foundBudget.incomePlanned = newIncomePlanned
-    foundBudget.incomeTotal = newIncomeTotal
-    foundBudget.expensesPlanned = newExpensesPlanned
-    foundBudget.expensesTotal = newExpensesTotal
-    await foundBudget.save()
-}
-
-
 // ================ ROUTES ================== //
 // -------------- HOME PAGE ----------------- //
 app.get('/', (req, res) => {

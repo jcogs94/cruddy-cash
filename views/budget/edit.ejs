@@ -10,7 +10,7 @@
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <form action="/budgets/<%= budget._id %>?_method=put" method="post">
+        <form action="/user-budgets/<%= budget._id %>?_method=put" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Update Budget</legend>
                 <div>

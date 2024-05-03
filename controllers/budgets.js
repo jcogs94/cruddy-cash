@@ -6,6 +6,61 @@ const User = require('../models/user.js')
 router.use(methodOverride('_method'))
 
 
+// =============== FUNCTIONS ================ //
+// Updates sub-docs based on passed parent model
+const updateChild = async (parent, child, updatedChild) => {
+    // Obtains keys for updated values    
+    const childKeys = Object.keys(updatedChild)
+
+    // Loops through keys and updates sub-doc's values
+    childKeys.forEach( (key) => {
+        child[key] = updatedChild[key]
+    })
+
+    // Saves changes at the parent level
+    await parent.save()
+}
+
+// Updates all planned and total values for a budget
+const updateBudget = async (budgetId) => {
+    const foundBudget = await Budget.findById(budgetId)
+    let newIncomePlanned = 0
+    let newIncomeTotal = 0
+    let newExpensesPlanned = 0
+    let newExpensesTotal = 0
+
+    foundBudget.categories.forEach( (category) => {
+        let total = 0
+        
+        // Adds each entry amount to a total for
+        // that category
+        category.entries.forEach( (entry) => {
+            total += entry.amount
+        })
+        
+        // Saves total value for category
+        category.total = total
+
+        // Adds to the planned and total values
+        // based on income/expense
+        if (category.isIncome) {
+            newIncomePlanned += category.planned
+            newIncomeTotal += category.total
+        } else {
+            newExpensesPlanned += category.planned
+            newExpensesTotal += category.total
+        }
+    })
+
+    // Updates all new values and saves
+    foundBudget.incomePlanned = newIncomePlanned
+    foundBudget.incomeTotal = newIncomeTotal
+    foundBudget.expensesPlanned = newExpensesPlanned
+    foundBudget.expensesTotal = newExpensesTotal
+    await foundBudget.save()
+}
+
+
 // ================= ROUTES ================ //
 router.get('/', async (req, res) => {
     const user = await User.findById(req.session.user._id)
@@ -101,8 +156,7 @@ router.post('/', async (req, res) => {
     user.budgets.push(newBudget)
     user.save()
 
-    res.redirect(`/dashboard`)
-    // res.redirect(`/budgets/${newBudget._id}`)
+    res.redirect(`/user-budgets/${newBudget._id}`)
 })
 
 router.get('/:budgetId', async (req, res) => {
@@ -131,13 +185,16 @@ router.get('/:budgetId', async (req, res) => {
 })
 
 router.get('/:budgetId/edit', async (req, res) => {
-    const foundBudget = await Budget.findById(req.params.budgetId)
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
     res.render('budget/edit.ejs', {
         budget: foundBudget
     })
 })
 
 router.put('/:budgetId', async (req, res) => {
+    const user = await User.findById(req.session.user._id)
+    const foundBudget = user.budgets.id(req.params.budgetId)
     const updatedBudget = req.body
     
     // Splits the "month" input type into month and year
@@ -191,9 +248,11 @@ router.put('/:budgetId', async (req, res) => {
     updatedBudget.month = month
     updatedBudget.monthNumStr = monthNumStr
     updatedBudget.name = updatedBudget.month + ', ' + updatedBudget.year
-    
-    await Budget.findByIdAndUpdate(req.params.budgetId, updatedBudget)
-    res.redirect('/budgets')
+
+    // Updates values of budget and saves
+    updateChild(user, foundBudget, updatedBudget)
+
+    res.redirect('/user-budgets')
 })
 
 router.delete('/:budgetId', async (req, res) => {
