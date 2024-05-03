@@ -106,7 +106,7 @@ app.get('/budgets/new', (req, res) => {
 })
 
 app.post('/budgets', async (req, res) => {
-    const newBudget = req.body
+    let newBudget = req.body
     
     // Splits the "month" input type into month and year
     let monthInput = newBudget.month.split('-')
@@ -168,8 +168,8 @@ app.post('/budgets', async (req, res) => {
     newBudget.incomeTotal = 0
     newBudget.expensesTotal = 0
     
-    await Budget.create(newBudget)
-    res.redirect('/budgets')
+    newBudget = await Budget.create(newBudget)
+    res.redirect(`/budgets/${newBudget._id}`)
 })
 
 app.get('/budgets/:budgetId', async (req, res) => {
@@ -301,7 +301,7 @@ app.get('/budgets/:budgetId/categories/new', async (req, res) => {
 
 app.post('/budgets/:budgetId/categories', async (req, res) => {
     const foundBudget = await Budget.findById(req.params.budgetId)
-    const newCategory = req.body
+    let newCategory = req.body
     
     // Changes isIncome type to boolean
     if(newCategory.isIncome === 'true') {
@@ -314,8 +314,10 @@ app.post('/budgets/:budgetId/categories', async (req, res) => {
     newCategory.planned = parseFloat(newCategory.planned)
     newCategory.total = 0
 
-    // Pushes new category to category array and saves the category
-    // changes
+    // Creates new category and updates the newCategory obj (for ref
+    // in redirect), then pushes it to category array and saves the
+    // category changes
+    newCategory = foundBudget.categories.create(newCategory)
     foundBudget.categories.push(newCategory)
     await foundBudget.save()
 
@@ -323,7 +325,7 @@ app.post('/budgets/:budgetId/categories', async (req, res) => {
     // new planned amounts added by the user
     await updateBudget(foundBudget._id)
     
-    res.redirect(`/budgets/${req.params.budgetId}`)
+    res.redirect(`/budgets/${req.params.budgetId}/categories/${newCategory._id}`)
 })
 
 app.get('/budgets/:budgetId/categories/:categoryId', async (req, res) => {
