@@ -69,13 +69,63 @@ app.get('/budgets/new', (req, res) => {
 app.post('/budgets', async (req, res) => {
     const newBudget = req.body
     
-    // Creates a name for the budget based on year and month
-    newBudget.name = newBudget.month + ' ' + newBudget.year
+    // Splits the "month" input type into month and year
+    let monthInput = newBudget.month.split('-')
+    let monthNumStr = monthInput.pop()
+    let month = parseInt(monthNumStr)
+    newBudget.year = parseInt(monthInput.pop())
+    
+    // Changes the month Number to a String
+    switch (month) {
+        case 1:
+            month = 'January'
+            break;
+        case 2:
+            month = 'February'
+            break;
+        case 3:
+            month = 'March'
+            break;
+        case 4:
+            month = 'April'
+            break;
+        case 5:
+            month = 'May'
+            break;
+        case 6:
+            month = 'June'
+            break;
+        case 7:
+            month = 'July'
+            break;
+        case 8:
+            month = 'August'
+            break;
+        case 9:
+            month = 'September'
+            break;
+        case 10:
+            month = 'October'
+            break;
+        case 11:
+            month = 'November'
+            break;
+        case 12:
+            month = 'December'
+            break;
+    }
+    
+    // Adds String month to newBudget and creates a 
+    // name for the budget based on year and month
+    newBudget.month = month
+    newBudget.monthNumStr = monthNumStr
+    newBudget.name = newBudget.month + ', ' + newBudget.year
 
-    // Declarations for model compliance
-    newBudget.year = parseInt(newBudget.year)
-    newBudget.incomePlanned = parseInt(newBudget.incomePlanned)
-    newBudget.expensesPlanned = parseInt(newBudget.expensesPlanned)
+    // Declarations for model compliance, sets init
+    // values all to 0, to be updated as user inputs
+    // categories and entries
+    newBudget.incomePlanned = 0
+    newBudget.expensesPlanned = 0
     newBudget.incomeTotal = 0
     newBudget.expensesTotal = 0
     
@@ -117,13 +167,57 @@ app.get('/budgets/:budgetId/edit', async (req, res) => {
 app.put('/budgets/:budgetId', async (req, res) => {
     const updatedBudget = req.body
     
-    // Creates a name for the budget based on year and month
-    updatedBudget.name = updatedBudget.month + ' ' + updatedBudget.year
-
-    // Type changes for model compliance
-    updatedBudget.year = parseInt(updatedBudget.year)
-    updatedBudget.incomePlanned = parseInt(updatedBudget.incomePlanned)
-    updatedBudget.expensesPlanned = parseInt(updatedBudget.expensesPlanned)
+    // Splits the "month" input type into month and year
+    let monthInput = updatedBudget.month.split('-')
+    let monthNumStr = monthInput.pop()
+    let month = parseInt(monthNumStr)
+    updatedBudget.year = parseInt(monthInput.pop())
+    
+    // Changes the month Number to a String
+    switch (month) {
+        case 1:
+            month = 'January'
+            break;
+        case 2:
+            month = 'February'
+            break;
+        case 3:
+            month = 'March'
+            break;
+        case 4:
+            month = 'April'
+            break;
+        case 5:
+            month = 'May'
+            break;
+        case 6:
+            month = 'June'
+            break;
+        case 7:
+            month = 'July'
+            break;
+        case 8:
+            month = 'August'
+            break;
+        case 9:
+            month = 'September'
+            break;
+        case 10:
+            month = 'October'
+            break;
+        case 11:
+            month = 'November'
+            break;
+        case 12:
+            month = 'December'
+            break;
+    }
+    
+    // Adds String month to newBudget and creates a 
+    // name for the budget based on year and month
+    updatedBudget.month = month
+    updatedBudget.monthNumStr = monthNumStr
+    updatedBudget.name = updatedBudget.month + ', ' + updatedBudget.year
     
     await Budget.findByIdAndUpdate(req.params.budgetId, updatedBudget)
     res.redirect('/budgets')
