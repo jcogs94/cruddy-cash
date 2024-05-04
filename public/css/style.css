@@ -11,21 +11,80 @@ body {
     min-height: 100vh;
 }
 
-nav {
+header {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-evenly;
-    background-color: lightgray;
-    padding: 20px 0;
+    justify-content: center;
+    top: 0;
     width: 100%;
-    margin-bottom: 50px;
+    height: 64px;
+    position: sticky;
+    background-color: black;
+    padding: 0 10px;
+    margin-bottom: 40px;
 }
 
-nav > a {
-    text-decoration: none;
+#site-name {
+    color: white;
+    font-size: 1.5rem;
     font-weight: 900;
-    color: black;
+}
+
+#hamburger-icon {
+    z-index: 1;
+    position: absolute;
+    top: 14px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.line {
+    width: 30px;
+    height: 5px;
+    margin: 5px;
+    background-color: white;
+}
+
+#hamburger-button {
+    display: none;
+}
+
+#hamburger-button:checked + nav {
+    right: 0;
+}
+
+nav {
+    top: 0;
+    position: fixed;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 74px;
+
+    overflow: hidden;
+    transition: right 0.5s;
+    background-color: darkgrey;
+
+    ul {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 0;
+    }
+    
+    .menu > li {
+        margin: 10px 0;
+    }
+
+    .menu > li > a {
+        color: white;
+        text-align: center;
+    }
 }
 
 main {
@@ -35,6 +94,15 @@ main {
     gap: 40px;
     max-width: calc(100% - 20px);
     margin-bottom: 50px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+ul {
+    list-style: none;
 }
 
 fieldset {
@@ -69,13 +137,3 @@ button {
 .two-line-input {
     flex-direction: column;
 }
-
-/* .input {
-    display: flex;
-    flex-direction: column;
-} */
-
-/* #create-account-fs {
-    display: block;
-
-} */
