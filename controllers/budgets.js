@@ -27,9 +27,9 @@ const updateBudget = async (userId, budgetId) => {
     const user = await User.findById(userId)
     const foundBudget = user.budgets.id(budgetId)
     let newIncomePlanned = 0
-    let newIncomeTotal = 0
+    let newIncomeReal = 0
     let newExpensesPlanned = 0
-    let newExpensesTotal = 0
+    let newExpensesReal = 0
 
     foundBudget.categories.forEach( (category) => {
         let total = 0
@@ -40,25 +40,25 @@ const updateBudget = async (userId, budgetId) => {
             total += entry.amount
         })
         
-        // Saves total value for category
+        // Saves real total value for category
         category.total = total
 
         // Adds to the planned and total values
         // based on income/expense
         if (category.isIncome) {
             newIncomePlanned += category.planned
-            newIncomeTotal += category.total
+            newIncomeReal += category.total
         } else {
             newExpensesPlanned += category.planned
-            newExpensesTotal += category.total
+            newExpensesReal += category.total
         }
     })
 
     // Updates all new values and saves
     foundBudget.incomePlanned = newIncomePlanned
-    foundBudget.incomeTotal = newIncomeTotal
+    foundBudget.incomeReal = newIncomeReal
     foundBudget.expensesPlanned = newExpensesPlanned
-    foundBudget.expensesTotal = newExpensesTotal
+    foundBudget.expensesReal = newExpensesReal
     await user.save()
 }
 
@@ -151,10 +151,14 @@ router.post('/', isSignedIn, async (req, res) => {
     // categories and entries
     newBudget.incomePlanned = 0
     newBudget.expensesPlanned = 0
-    newBudget.incomeTotal = 0
-    newBudget.expensesTotal = 0
+    newBudget.incomeReal = 0
+    newBudget.expensesReal = 0
     
     newBudget = user.budgets.create(newBudget)
+    if (user.budgets.length === 0) {
+        user.currentBudget = newBudget
+    }
+
     user.budgets.push(newBudget)
     user.save()
 

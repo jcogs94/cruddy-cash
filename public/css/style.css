@@ -9,6 +9,7 @@ body {
     align-items: center;
     justify-items: flex-start;
     min-height: 100vh;
+    gap: 30px;
 }
 
 header {
@@ -22,7 +23,6 @@ header {
     position: sticky;
     background-color: black;
     padding: 0 10px;
-    margin-bottom: 40px;
 }
 
 #site-name {
@@ -92,9 +92,9 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
     max-width: calc(100% - 20px);
     margin-bottom: 50px;
+    gap: 30px;
 }
 
 a {

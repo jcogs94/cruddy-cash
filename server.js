@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/dashboard', isSignedIn, (req, res) => {
-    res.render('./user/index.ejs')
+    res.render('./dashboard/index.ejs')
 })
 
 
