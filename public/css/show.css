@@ -60,7 +60,7 @@
     border-bottom: 1px solid white;
 }
 
-#button-container {
+.button-container {
     display: flex;
     flex-direction: row;
     align-content: center;

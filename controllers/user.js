@@ -4,6 +4,7 @@ const methodOverride = require('method-override')
 const isSignedIn = require('../middleware/is-signed-in.js')
 const User = require('../models/user.js')
 
+router.use(express.urlencoded({ extended: false }))
 router.use(methodOverride('_method'))
 
 
@@ -118,90 +119,99 @@ router.get('/budgets/new', isSignedIn, (req, res) => {
 
 router.post('/budgets', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
-    let newBudget = req.body
-
-    // Splits the "month" input type into month and year
-    let monthInput = newBudget.month.split('-')
-    let monthNumStr = monthInput.pop()
-    let month = parseInt(monthNumStr)
-    newBudget.year = parseInt(monthInput.pop())
     
-    // Changes the month Number to a String
-    switch (month) {
-        case 1:
-            month = 'January'
-            break;
-        case 2:
-            month = 'February'
-            break;
-        case 3:
-            month = 'March'
-            break;
-        case 4:
-            month = 'April'
-            break;
-        case 5:
-            month = 'May'
-            break;
-        case 6:
-            month = 'June'
-            break;
-        case 7:
-            month = 'July'
-            break;
-        case 8:
-            month = 'August'
-            break;
-        case 9:
-            month = 'September'
-            break;
-        case 10:
-            month = 'October'
-            break;
-        case 11:
-            month = 'November'
-            break;
-        case 12:
-            month = 'December'
-            break;
-    }
+    // Uses same post route with query params for making a budget
+    // the user's current budget. If the query params are not there,
+    // posts a new budget
+    if (req.query.current === 'true') {
+        user.currentBudgetId = req.query.id
+        await user.save()
+        res.redirect('/user/dashboard')
+    } else  {
+        let newBudget = req.body
     
-    // Adds String month to newBudget and creates a 
-    // name for the budget based on year and month
-    newBudget.month = month
-    newBudget.monthNumStr = monthNumStr
-    newBudget.name = newBudget.month + ', ' + newBudget.year
-    
-    // Creates the new budget and sets it as the
-    // current budget if the user has no others
-    newBudget = user.budgets.create(newBudget)
-    if (user.budgets.length === 0) {
-        user.currentBudgetId = newBudget._id
-    }
-
-    // Sets three empty "category" models when the budget is created
-    let budgetCategoryNames = ['income', 'savings', 'expenses']
-    budgetCategoryNames.forEach( (category) => {
-        newBudget[category] = {
-            name: category,
-            planned: 0,
-            current: 0
+        // Splits the "month" input type into month and year
+        let monthInput = newBudget.month.split('-')
+        let monthNumStr = monthInput.pop()
+        let month = parseInt(monthNumStr)
+        newBudget.year = parseInt(monthInput.pop())
+        
+        // Changes the month Number to a String
+        switch (month) {
+            case 1:
+                month = 'January'
+                break;
+            case 2:
+                month = 'February'
+                break;
+            case 3:
+                month = 'March'
+                break;
+            case 4:
+                month = 'April'
+                break;
+            case 5:
+                month = 'May'
+                break;
+            case 6:
+                month = 'June'
+                break;
+            case 7:
+                month = 'July'
+                break;
+            case 8:
+                month = 'August'
+                break;
+            case 9:
+                month = 'September'
+                break;
+            case 10:
+                month = 'October'
+                break;
+            case 11:
+                month = 'November'
+                break;
+            case 12:
+                month = 'December'
+                break;
         }
-    })
-
-    user.budgets.push(newBudget)
-    await user.save()
-
-    if (user.budgets.length === 1) {
-        // The budget just created is the only one,
-        // redirect to dashboard
-        res.redirect(`/user/dashboard`)
-    } else {
-        // User already has at least 1 budget, redirect
-        // to show page for new budget
-        res.redirect(`/user/budgets/${newBudget._id}`)
+        
+        // Adds String month to newBudget and creates a 
+        // name for the budget based on year and month
+        newBudget.month = month
+        newBudget.monthNumStr = monthNumStr
+        newBudget.name = newBudget.month + ', ' + newBudget.year
+        
+        // Creates the new budget and sets it as the
+        // current budget if the user has no others
+        newBudget = user.budgets.create(newBudget)
+        if (user.budgets.length === 0) {
+            user.currentBudgetId = newBudget._id
+        }
+    
+        // Sets three empty "category" models when the budget is created
+        let budgetCategoryNames = ['income', 'savings', 'expenses']
+        budgetCategoryNames.forEach( (category) => {
+            newBudget[category] = {
+                name: category,
+                planned: 0,
+                current: 0
+            }
+        })
+    
+        user.budgets.push(newBudget)
+        await user.save()
+    
+        if (user.budgets.length === 1) {
+            // The budget just created is the only one,
+            // redirect to dashboard
+            res.redirect(`/user/dashboard`)
+        } else {
+            // User already has at least 1 budget, redirect
+            // to show page for new budget
+            res.redirect(`/user/budgets/${newBudget._id}`)
+        }
     }
-
 })
 
 router.get('/budgets/:budgetId', isSignedIn, async (req, res) => {
@@ -214,7 +224,8 @@ router.get('/budgets/:budgetId', isSignedIn, async (req, res) => {
         res.redirect('/user/dashboard')
     } else {
         res.render('budget/show.ejs', {
-            budget: foundBudget
+            budget: foundBudget,
+            currentBudgetId: user.currentBudgetId
         })
     }    
 })
@@ -287,7 +298,7 @@ router.put('/budgets/:budgetId', isSignedIn, async (req, res) => {
     // Updates values of budget and saves
     updateChild(user, foundBudget, updatedBudget)
 
-    res.redirect('/user-budgets')
+    res.redirect('/user/budgets')
 })
 
 router.delete('/budgets/:budgetId', isSignedIn, async (req, res) => {
