@@ -73,3 +73,14 @@ main {
     color: white;
     border-bottom: 1px solid white;
 }
+
+#button-container {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 0;
+    background-color: white;
+}

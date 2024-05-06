@@ -89,7 +89,8 @@ router.get('/dashboard', isSignedIn, async (req, res) => {
     }
 })
 
-router.get('/budgets/', isSignedIn, async (req, res) => {
+// ---------------- BUDGETS --------------- //
+router.get('/budgets', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     let budgetsByYear = {}
     
@@ -115,10 +116,10 @@ router.get('/budgets/new', isSignedIn, (req, res) => {
     res.render('budget/new.ejs')
 })
 
-router.post('/budgets/', isSignedIn, async (req, res) => {
+router.post('/budgets', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     let newBudget = req.body
-    
+
     // Splits the "month" input type into month and year
     let monthInput = newBudget.month.split('-')
     let monthNumStr = monthInput.pop()
@@ -189,34 +190,33 @@ router.post('/budgets/', isSignedIn, async (req, res) => {
     })
 
     user.budgets.push(newBudget)
-    user.save()
+    await user.save()
 
-    res.redirect(`/user/dashboard`)
+    if (user.budgets.length === 1) {
+        // The budget just created is the only one,
+        // redirect to dashboard
+        res.redirect(`/user/dashboard`)
+    } else {
+        // User already has at least 1 budget, redirect
+        // to show page for new budget
+        res.redirect(`/user/budgets/${newBudget._id}`)
+    }
+
 })
 
 router.get('/budgets/:budgetId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
 
-    const budgetCategories = foundBudget.categories
-    let incomeCategories = []
-    let expenseCategories = []
-
-    // Loop through budgetCategories and push accordingly
-    // to sort by isIncome
-    budgetCategories.forEach( (category) => {
-        if(category.isIncome) {
-            incomeCategories.push(category)
-        } else {
-            expenseCategories.push(category)
-        }
-    })
-
-    res.render('budget/show.ejs', {
-        budget: foundBudget,
-        incomeCategories: incomeCategories,
-        expenseCategories: expenseCategories
-    })
+    // If the user clicked on their current budget, redirects
+    // to the dashboard, else show page for individual budget
+    if (foundBudget._id === user.currentBudgetId) {
+        res.redirect('/user/dashboard')
+    } else {
+        res.render('budget/show.ejs', {
+            budget: foundBudget
+        })
+    }    
 })
 
 router.get('/budgets/:budgetId/edit', isSignedIn, async (req, res) => {
@@ -291,9 +291,11 @@ router.put('/budgets/:budgetId', isSignedIn, async (req, res) => {
 })
 
 router.delete('/budgets/:budgetId', isSignedIn, async (req, res) => {
+    console.log('delete route...')
+    
     const user = await User.findById(req.session.user._id)
     user.budgets.pull(req.params.budgetId)
-    user.save()
+    await user.save()
 
     // If no other budgets, sets currentBudgetId to "empty",
     // else sets to newest dated budget
@@ -311,9 +313,9 @@ router.delete('/budgets/:budgetId', isSignedIn, async (req, res) => {
         user.currentBudgetId = newestBudget._id
     }
 
-    user.save()
+    await user.save()
     
-    res.redirect('/user/dashboard')
+    res.redirect('/user/budgets')
 })
 
 // ---------------- CATEGORIES -------------- //
