@@ -13,62 +13,87 @@
         <div id="greeting-container">
             <h1>Welcome</h1>
             <h1><%= user.firstName %>!</h1>
+        </div>
+        <% if (hasCurrent) { %>
             <p><em>view your current budget below</em></p>
-        </div>
-        <div id="current-budget-container">
-            <h2 id="current-name"><%= user.currentBudget.name %></h2>
-            <div class="type-container" id="income-cats">
-                <h3 class="type-heading">Income</h3>
-                <div class="content-box-container">
-                    <div class="content-box">
-                        <h4 class="content-header">Planned: $<%= user.currentBudget.incomePlanned %></h4>
-                        <form action="/user-budgets/<%= user.currentBudget._id %>/categories/new" method="get">
-                            <button type="submit">Add Group</button>
-                        </form>
+            <div id="current-budget-container">
+                <h2 id="current-name"><%= currentBudget.name %></h2>
+                <div class="type-container" id="income-cats">
+                    <h3 class="type-heading">Income</h3>
+                    <div class="content-box-container">
+                        <div class="content-box">
+                            <h4 class="content-header">Planned: $<%= currentBudget.income.planned %></h4>
+                            <div class="content">
+                                
+                            </div>
+                            <form action="/user-budgets/<%= currentBudget._id %>/categories/new" method="get">
+                                <button type="submit">Add Group</button>
+                            </form>
+                        </div>
+                        <div class="content-box">
+                            <h4 class="content-header">Earned: $<%= currentBudget.income.current %></h4>
+                            <div class="content">
+                            
+                            </div>
+                            <form action="/user-budgets/<%= currentBudget._id %>" method="get"> <!-- /expense/entries/new" -->
+                                <button type="submit">Add Income</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="content-box">
-                        <h4 class="content-header">Earned: $<%= user.currentBudget.incomeReal %></h4>
-                        <form action="/user-budgets/<%= user.currentBudget._id %>" method="get"> <!-- /expense/entries/new" -->
-                            <button type="submit">Add Income</button>
-                        </form>
+                </div>
+                <div class="type-container" id="saving-cats">
+                    <h3 class="type-heading">Savings</h3>
+                    <div class="content-box-container">
+                        <div class="content-box">
+                            <h4 class="content-header">Planned: $<%= currentBudget.savings.planned %></h4>
+                            <div class="content">
+                                
+                            </div>
+                            <form action="/user-budgets/<%= currentBudget._id %>/categories/new" method="get">
+                                <button type="submit">Add Group</button>
+                            </form>
+                        </div>
+                        <div class="content-box">
+                            <h4 class="content-header">Saved: $<%= currentBudget.savings.current %></h4>
+                            <div class="content">
+    
+                            </div>
+                            <form action="/user-budgets/<%= currentBudget._id %>" method="get"> <!-- /saving/entries/new" -->
+                                <button type="submit">Add Saving</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="type-container" id="expense-cats">
+                    <h3 class="type-heading">Expenses</h3>
+                    <div class="content-box-container">
+                        <div class="content-box">
+                            <h4 class="content-header">Planned: $<%= currentBudget.expenses.planned %></h4>
+                            <div class="content">
+                
+                            </div>
+                            <form action="/user-budgets/<%= currentBudget._id %>/categories/new" method="get">
+                                <button type="submit">Add Group</button>
+                            </form>
+                        </div>
+                        <div class="content-box">
+                            <h4 class="content-header">Spent: $<%= currentBudget.expenses.current %></h4>
+                            <div class="content">
+                
+                            </div>
+                            <form action="/user-budgets/<%= currentBudget._id %>" method="get">  <!-- /expense/entries/new" -->
+                                <button type="submit">Add Expense</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="type-container" id="saving-cats">
-                <h3 class="type-heading">Savings</h3>
-                <div class="content-box-container">
-                    <div class="content-box">
-                        <h4 class="content-header">Planned: $<%= user.currentBudget.savingsPlanned %></h4>
-                        <form action="/user-budgets/<%= user.currentBudget._id %>/categories/new" method="get">
-                            <button type="submit">Add Group</button>
-                        </form>
-                    </div>
-                    <div class="content-box">
-                        <h4 class="content-header">Saved: $<%= user.currentBudget.savingsReal %></h4>
-                        <form action="/user-budgets/<%= user.currentBudget._id %>" method="get"> <!-- /saving/entries/new" -->
-                            <button type="submit">Add Saving</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="type-container" id="expense-cats">
-                <h3 class="type-heading">Expenses</h3>
-                <div class="content-box-container">
-                    <div class="content-box">
-                        <h4 class="content-header">Planned: $<%= user.currentBudget.expensesPlanned %></h4>
-                        <form action="/user-budgets/<%= user.currentBudget._id %>/categories/new" method="get">
-                            <button type="submit">Add Group</button>
-                        </form>
-                    </div>
-                    <div class="content-box">
-                        <h4 class="content-header">Spent: $<%= user.currentBudget.expensesReal %></h4>
-                        <form action="/user-budgets/<%= user.currentBudget._id %>" method="get">  <!-- /expense/entries/new" -->
-                            <button type="submit">Add Expense</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <% } else { %>
+            <p><em>You currently do not have any budgets. Create one here:</em></p>
+            <form action="/user/budgets/new" method="get">
+                <button type="submit">Create Budget</button>
+            </form>
+        <% } %>
     </main>
 </body>
 </html>

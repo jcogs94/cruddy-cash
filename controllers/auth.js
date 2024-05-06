@@ -31,11 +31,11 @@ router.post('/new-account', async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         budgets: user.budgets,
-        currentBudget: user.currentBudget
+        currentBudgetId: user.currentBudgetId
     }
 
     req.session.save(() => {
-        res.redirect('/dashboard')
+        res.redirect('/user/dashboard')
     })
 })
 
@@ -69,7 +69,7 @@ router.post('/sign-in', async (req, res) => {
     }
 
     req.session.save(() => {
-        res.redirect('/dashboard')
+        res.redirect('/user/dashboard')
     })
 })
 

@@ -15,8 +15,8 @@ const groupSchema = new mongoose.Schema({
 
 const categorySchema = new mongoose.Schema({
     name: String,
-    plannedTotal: Number,
-    currentTotal: Number,
+    planned: Number,
+    current: Number,
     groups: [groupSchema]
 })
 
@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     budgets: [budgetSchema],
-    currentBudget: budgetSchema
+    currentBudgetId: String
 })
 
 const User = mongoose.model('User', userSchema)
