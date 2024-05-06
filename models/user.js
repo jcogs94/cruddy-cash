@@ -8,8 +8,8 @@ const entrySchema = new mongoose.Schema({
 
 const groupSchema = new mongoose.Schema({
     name: String,
-    plannedTotal: Number,
-    CurrentTotal: Number,
+    planned: Number,
+    current: Number,
     entries: [entrySchema]
 })
 

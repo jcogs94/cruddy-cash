@@ -4,28 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <title>CRUDdy Cash - New Category</title>
+    <title>CRUDdy Cash - New Group</title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h3>New Category</h3>
-        <form action="/user-budgets/<%= budget._id %>/categories" method="post">
+        <h3>New Group</h3>
+        <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups" method="post">
             <fieldset aria-labelledby="new-entry-legend">
-                <legend name="new-entry-legend">Create Category</legend>
+                <legend name="new-entry-legend">Create Group</legend>
                 <div>
                     <label for="name">Name:</label><br>
                     <input type="text" name="name">
-                </div>
-                <div>
-                    <label for="income-group">Is this income?</label><br>
-                    <div name="income-group">
-                        <label for="income-yes">Yes</label>
-                        <input type="radio" id="income-yes" name="isIncome" value="true">
-                        <label for="income-no">No</label>
-                        <input type="radio" id="income-no" name="isIncome" value="false">
-                    </div>
                 </div>
                 <div class="two-line-input">
                     <label for="planned">How much do you plan for this month?</label>

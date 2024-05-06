@@ -329,7 +329,7 @@ router.delete('/budgets/:budgetId', isSignedIn, async (req, res) => {
     res.redirect('/user/budgets')
 })
 
-// ---------------- CATEGORIES -------------- //
+// ------------------- Groups ----------------- //
 router.get('/budgets/categories', isSignedIn, async (req, res) => {
     const allCategories = await Category.find()
     
@@ -354,15 +354,16 @@ router.get('/budgets/categories', isSignedIn, async (req, res) => {
     })
 })
 
-router.get('/budgets/:budgetId/categories/new', isSignedIn, async (req, res) => {
+router.get('/budgets/:budgetId/:type/groups/new', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    res.render('category/new.ejs', {
-        budget: foundBudget
+    res.render('group/new.ejs', {
+        budget: foundBudget,
+        type: req.params.type
     })
 })
 
-router.post('/budgets/:budgetId/categories', isSignedIn, async (req, res) => {
+router.post('/budgets/:budgetId/:type/groups', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     let newCategory = req.body
