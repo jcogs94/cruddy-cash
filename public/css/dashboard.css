@@ -104,3 +104,14 @@ main {
     text-decoration: none;
     color: white;
 }
+
+.group-div {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    gap: 10px;
+}
+
+.group-div > label {
+    color: white;
+}

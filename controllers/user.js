@@ -51,27 +51,12 @@ const updateBudget = async (userId, budgetId) => {
 // ================= ROUTES ================ //
 router.get('/dashboard', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
-    
-    // Sets the current budget for display, if available
-    let hasCurrent = false
-    let currentBudget = {}
-    if (user.currentBudgetId !== 'empty') {
-        hasCurrent = true
-        currentBudget = user.budgets.id(user.currentBudgetId)
-    }
-    
-    // If user has a current budget, send to dash,
-    // else, only sends that user doesn't have one
-    if (hasCurrent) {
-        res.render('./dashboard/index.ejs', {
-            hasCurrent: hasCurrent,
-            currentBudget: currentBudget
-        })
-    } else {
-        res.render('./dashboard/index.ejs', {
-            hasCurrent: hasCurrent
-        })
-    }
+    const currentBudget = user.budgets.id(user.currentBudgetId)
+
+    res.render('./budget/show.ejs', {
+        budget: currentBudget,
+        currentBudgetId: user.currentBudgetId
+    })
 })
 
 // ---------------- BUDGETS --------------- //
@@ -110,7 +95,10 @@ router.post('/budgets', isSignedIn, async (req, res) => {
     if (req.query.current === 'true') {
         user.currentBudgetId = req.query.id
         await user.save()
-        res.redirect('/user/dashboard')
+        res.redirect('/user/dashboard', {
+            budget: user.budgets.id(user.currentBudgetId),
+            currentBudgetId: user.currentBudgetId
+        })
     } else  {
         let newBudget = req.body
     
@@ -186,15 +174,7 @@ router.post('/budgets', isSignedIn, async (req, res) => {
         user.budgets.push(newBudget)
         await user.save()
     
-        if (user.budgets.length === 1) {
-            // The budget just created is the only one,
-            // redirect to dashboard
-            res.redirect(`/user/dashboard`)
-        } else {
-            // User already has at least 1 budget, redirect
-            // to show page for new budget
-            res.redirect(`/user/budgets/${newBudget._id}`)
-        }
+        res.redirect(`/user/budgets/${newBudget._id}`)
     }
 })
 
@@ -202,16 +182,10 @@ router.get('/budgets/:budgetId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
 
-    // If the user clicked on their current budget, redirects
-    // to the dashboard, else show page for individual budget
-    if (foundBudget._id === user.currentBudgetId) {
-        res.redirect('/user/dashboard')
-    } else {
-        res.render('budget/show.ejs', {
-            budget: foundBudget,
-            currentBudgetId: user.currentBudgetId
-        })
-    }    
+    res.render('budget/show.ejs', {
+        budget: foundBudget,
+        currentBudgetId: user.currentBudgetId
+    })
 })
 
 router.get('/budgets/:budgetId/edit', isSignedIn, async (req, res) => {
@@ -343,11 +317,7 @@ router.post('/budgets/:budgetId/:type/groups', isSignedIn, async (req, res) => {
     // new planned amounts added by the user
     await updateBudget(user._id, foundBudget._id)
     
-    if (foundBudget._id == user.currentBudgetId) {
-        res.redirect('/user/dashboard')
-    } else {
-        res.redirect(`/user/budgets/${foundBudget._id}`)
-    }
+    res.redirect(`/user/budgets/${foundBudget._id}`)
 })
 
 router.get('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, res) => {
