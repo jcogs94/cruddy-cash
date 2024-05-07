@@ -11,20 +11,20 @@
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h2><%= category.name %></h2>
+        <h2><%= group.name %> (<%= type %>)</h2>
         <h3><%= entry.name %></h3>
         <ul>
-            <li><b>Day Posted:</b> <%= entry.postedDay %></li>
+            <li><b>Date Posted:</b> <%= entry.postedDate %></li>
             <li><b>Amount:</b> $<%= entry.amount %></li>
         </ul>
-        <div>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>" method="get">
-                <button type="submit">Go Back</button>
+        <div class="button-container">
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>" method="get">
+                <button type="submit">Back</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>/edit" method="get">
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>?_method=delete" method="post">
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>

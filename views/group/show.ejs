@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/show.css">
+    <title>CRUDdy Cash - <%= group.name %></title>
+</head>
+<body>
+    <%- include('../partials/nav.ejs') %>
+    <main>
+        <h1 id="current-name"><%= budget.name %></h1>
+        <div class="group-info">
+            <h2><%= group.name %> (<%= type %>)</h2>
+            <p><b>Planned:</b> $<%= group.planned %></p>
+            <p><b>Current Total:</b> $<%= group.current %></p>
+        </div>
+        <% if(group.entries.length === 0) { %>
+            <p><em>There are no <%= type %> entries yet for this group.</em></p>
+        <% } else { %>
+            <h2>Entries</h2>
+            <ul>
+                <% group.entries.forEach( (entry) => { %>
+                    <li>
+                        <a href="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
+                    </li>
+                <% }) %>
+            </ul>
+        <% } %>
+        <div class="button-container">
+            <form action="/user/budgets/<%= budget._id %>" method="get">
+                <button type="submit">Back</button>
+            </form>
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/new" method="get">
+                <button type="submit">Create Entry</button>
+            </form>
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/edit" method="get">
+                <button type="submit">Edit</button>
+            </form>
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>?_method=delete" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

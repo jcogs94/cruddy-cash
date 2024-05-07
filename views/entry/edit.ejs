@@ -10,9 +10,9 @@
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h2><%= category.name %></h2>
+        <h2><%= group.name %> (<%= type %>)</h2>
         <h3><%= entry.name %></h3>
-        <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>?_method=put" method="post">
+        <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>?_method=put" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Edit</legend>
                 <div>
@@ -20,13 +20,16 @@
                     <input type="text" name="name" value="<%= entry.name %>">
                 </div>
                 <div>
-                    <label for="postedDay">Day Posted:</label>
-                    <input type="number" name="postedDay" value="<%= entry.postedDay %>">
+                    <% let dateArr = entry.postedDate.split('/') %>
+                    <% let dateValue = dateArr[2] + '-' + dateArr[0] + '-' + dateArr[1] %>
+                    <label for="postedDate">Date Posted:</label>
+                    <input type="date" name="postedDate" value="<%= dateValue %>">
                 </div>
                 <div>
                     <label for="amount">Amount:</label>
-                    <input type="number" name="amount" value="<%= entry.amount %>">
+                    <input type="number" name="amount" step=".01" value="<%= entry.amount %>">
                 </div>
+                <input type="hidden" name="type" value="<%= type %>">
                 <button type="submit">Update</button>
             </fieldset>
         </form>

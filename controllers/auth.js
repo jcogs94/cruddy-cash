@@ -24,18 +24,18 @@ router.post('/new-account', async (req, res) => {
     req.body.password = hashedPassword
 
     const user = await User.create(req.body)
-    console.log(user)
 
     req.session.user = {
         _id: user._id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
-        budgets: user.budgets
+        budgets: user.budgets,
+        currentBudgetId: user.currentBudgetId
     }
 
     req.session.save(() => {
-        res.redirect('/dashboard')
+        res.redirect('/user/dashboard')
     })
 })
 
@@ -64,11 +64,12 @@ router.post('/sign-in', async (req, res) => {
         email: foundUser.email,
         firstName: foundUser.firstName,
         lastName: foundUser.lastName,
-        budgets: foundUser.budgets
+        budgets: foundUser.budgets,
+        currentBudget: foundUser.currentBudget
     }
 
     req.session.save(() => {
-        res.redirect('/dashboard')
+        res.redirect('/user/dashboard')
     })
 })
 

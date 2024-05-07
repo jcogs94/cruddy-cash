@@ -2,16 +2,22 @@ const mongoose = require('mongoose')
 
 const entrySchema = new mongoose.Schema({
     name: String,
-    postedDay: Number,
+    postedDate: String,
     amount: Number
+})
+
+const groupSchema = new mongoose.Schema({
+    name: String,
+    planned: Number,
+    current: Number,
+    entries: [entrySchema]
 })
 
 const categorySchema = new mongoose.Schema({
     name: String,
-    isIncome: Boolean,
     planned: Number,
-    total: Number,
-    entries: [entrySchema]
+    current: Number,
+    groups: [groupSchema]
 })
 
 const budgetSchema = new mongoose.Schema({
@@ -19,11 +25,9 @@ const budgetSchema = new mongoose.Schema({
     month: String,
     monthNumStr: String,
     name: String,
-    incomePlanned: Number,
-    incomeTotal: Number,
-    expensesPlanned: Number,
-    expensesTotal: Number,
-    categories: [categorySchema]
+    income: categorySchema,
+    savings: categorySchema,
+    expenses: categorySchema
 })
 
 const userSchema = new mongoose.Schema({
@@ -43,7 +47,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    budgets: [budgetSchema]
+    budgets: [budgetSchema],
+    currentBudgetId: String
 })
 
 const User = mongoose.model('User', userSchema)

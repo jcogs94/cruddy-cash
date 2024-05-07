@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/indexList.css">
-    <title>CRUDdy Cash - View Budgets</title>
+    <title>CRUDdy Cash - <%= user.firstName %>'s Budgets</title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1>All Budgets</h1>
+        <h1><%= user.firstName %>'s Budgets</h1>
         <% if(years.length > 0) { %>
             <% years.forEach( (year) => { %>
                 <div class="list-container">
@@ -18,7 +18,7 @@
                     <ul class="list">
                         <% budgets[year].forEach( (budget) => { %>
                             <li>
-                                <a href="/user-budgets/<%= budget._id %>"><%= budget.month %></a>
+                                <a href="/user/budgets/<%= budget._id %>"><%= budget.month %></a>
                             </li>
                         <% }) %>
                     </ul>
