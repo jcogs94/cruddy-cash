@@ -457,12 +457,13 @@ router.get('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId', isSigned
 router.get('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId/edit', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
-    const foundEntry = foundCategory.entries.id(req.params.entryId)
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
+    const foundEntry = foundGroup.entries.id(req.params.entryId)
 
     res.render('entry/edit.ejs', {
         budget: foundBudget,
-        category: foundCategory,
+        type: req.params.type,
+        group: foundGroup,
         entry: foundEntry
     })
 })
@@ -470,22 +471,22 @@ router.get('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId/edit', isS
 router.put('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
-    const foundEntry = foundCategory.entries.id(req.params.entryId)
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
+    const foundEntry = foundGroup.entries.id(req.params.entryId)
     const updatedEntry = req.body
     
-    // Change input strings to Nums
-    updatedEntry.postedDay = parseInt(updatedEntry.postedDay)
-    updatedEntry.amount = parseInt(updatedEntry.amount)
+    // Format date into desired output
+    let dateArr = updatedEntry.postedDate.split('-')
+    updatedEntry.postedDate = dateArr[1] + '/' + dateArr[2] + '/' + dateArr[0]
     
     // Updates budget with changes made to entry
     await updateChild(user, foundEntry, updatedEntry)
-
-    // Updates budget planned and total values with entry
-    // updated by user
-    updateBudget(user._id, foundBudget._id)
-
-    res.redirect(`/user-budgets/${foundBudget._id}/categories/${foundCategory._id}/entries/${foundEntry._id}`)
+    
+    // Updates budget planned and total values with entry added
+    // by user
+    await updateBudget(user._id, foundBudget._id)
+    
+    res.redirect(`/user/budgets/${req.params.budgetId}/${req.params.type}/groups/${req.params.groupId}`)
 })
 
 router.delete('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId', isSignedIn, async (req, res) => {

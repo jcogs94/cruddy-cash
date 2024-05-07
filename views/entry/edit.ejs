@@ -20,8 +20,10 @@
                     <input type="text" name="name" value="<%= entry.name %>">
                 </div>
                 <div>
-                    <label for="postedDate">Day Posted:</label>
-                    <input type="number" name="postedDate" value="<%= entry.postedDay %>">
+                    <% let dateArr = entry.postedDate.split('/') %>
+                    <% let dateValue = dateArr[2] + '-' + dateArr[0] + '-' + dateArr[1] %>
+                    <label for="postedDate">Date Posted:</label>
+                    <input type="date" name="postedDate" value="<%= dateValue %>">
                 </div>
                 <div>
                     <label for="amount">Amount:</label>
