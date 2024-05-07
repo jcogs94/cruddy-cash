@@ -20,14 +20,16 @@
             <div id="greeting-container">
                 <h1>Welcome</h1>
                 <h1><%= user.firstName %>!</h1>
-                <p><em>view your current budget below</em></p>
+                <% if (budget._id !== 'empty') { %>
+                    <p><em>view your current budget below</em></p>
+                <% } %>
             </div>
         <% } else { %>
             <div id="greeting-container">
                 <h1>View Budget</h1>
             </div>
         <% } %>
-        <% if (hasCurrent) { %>
+        <% if (user.currentBudgetId != 'empty') { %>
             <div id="current-budget-container">
                 <h2 id="current-name"><%= budget.name %></h2>
                 <div class="type-container" id="income-cats">

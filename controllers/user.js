@@ -51,7 +51,13 @@ const updateBudget = async (userId, budgetId) => {
 // ================= ROUTES ================ //
 router.get('/dashboard', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
-    const currentBudget = user.budgets.id(user.currentBudgetId)
+    let currentBudget = user.budgets.id(user.currentBudgetId)
+
+    if(currentBudget === null) {
+        currentBudget = {
+            _id: 'empty'
+        }
+    }
 
     res.render('./budget/show.ejs', {
         budget: currentBudget,
