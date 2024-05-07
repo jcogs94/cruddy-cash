@@ -286,8 +286,6 @@ router.put('/budgets/:budgetId', isSignedIn, async (req, res) => {
 })
 
 router.delete('/budgets/:budgetId', isSignedIn, async (req, res) => {
-    console.log('delete route...')
-    
     const user = await User.findById(req.session.user._id)
     user.budgets.pull(req.params.budgetId)
     await user.save()
