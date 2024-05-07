@@ -18,9 +18,19 @@
                     <div class="content-box">
                         <h4 class="content-header">Planned: $<%= budget.income.planned %></h4>
                         <div class="content">
-                            
+                            <% if (budget.income.groups.length === 0) { %>
+                                <p><em>There currently are no income groups. Create one below.</em></p>
+                            <% } else { %>
+                                <ul>
+                                    <% budget.income.groups.forEach( (group) => { %>
+                                        <li>
+                                            <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>"><%= group.name %></a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
                         </div>
-                        <form action="/user/budgets/<%= currentBudget._id %>/income/groups/new" !method="get">
+                        <form action="/user/budgets/<%= budget._id %>/income/groups/new" !method="get">
                             <button type="submit">Add Group</button>
                         </form>
                     </div>
@@ -41,9 +51,19 @@
                     <div class="content-box">
                         <h4 class="content-header">Planned: $<%= budget.savings.planned %></h4>
                         <div class="content">
-                            
+                            <% if (budget.savings.groups.length === 0) { %>
+                                <p><em>There currently are no savings groups. Create one below.</em></p>
+                            <% } else { %>
+                                <ul>
+                                    <% budget.savings.groups.forEach( (group) => { %>
+                                        <li>
+                                            <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>"><%= group.name %></a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
                         </div>
-                        <form action="/user/budgets/<%= currentBudget._id %>/savings/groups/new" method="get">
+                        <form action="/user/budgets/<%= budget._id %>/savings/groups/new" method="get">
                             <button type="submit">Add Group</button>
                         </form>
                     </div>
@@ -64,9 +84,19 @@
                     <div class="content-box">
                         <h4 class="content-header">Planned: $<%= budget.expenses.planned %></h4>
                         <div class="content">
-            
+                            <% if (budget.expenses.groups.length === 0) { %>
+                                <p><em>There currently are no expenses groups. Create one below.</em></p>
+                            <% } else { %>
+                                <ul>
+                                    <% budget.expenses.groups.forEach( (group) => { %>
+                                        <li>
+                                            <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>"><%= group.name %></a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
                         </div>
-                        <form action="/user/budgets/<%= currentBudget._id %>/expenses/groups/new" method="get">
+                        <form action="/user/budgets/<%= budget._id %>/expenses/groups/new" method="get">
                             <button type="submit">Add Group</button>
                         </form>
                     </div>
