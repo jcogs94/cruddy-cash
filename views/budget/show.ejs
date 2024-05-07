@@ -4,221 +4,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dashboard.css">
+    <link rel="stylesheet" href="/css/show.css">
     <script defer src="/js/add-entry-button.js"></script>
-    <title>CRUDdy Cash - Dashboard</title>
+    <title>CRUDdy Cash - <%= budget.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <% // Checks if the user has a current budget, else tells user to make one %>
-        <% let hasCurrent = false %>
-        <% if (currentBudgetId !== 'empty') { %>
-        <%     hasCurrent = true %>
-        <% } %>
-        <% if (budget._id == currentBudgetId) { %>
-            <div id="greeting-container">
-                <h1>Welcome</h1>
-                <h1><%= user.firstName %>!</h1>
-                <% if (budget._id !== 'empty') { %>
-                    <p><em>view your current budget below</em></p>
-                <% } %>
-            </div>
-        <% } else { %>
-            <div id="greeting-container">
-                <h1>View Budget</h1>
-            </div>
-        <% } %>
-        <% if (user.currentBudgetId != 'empty') { %>
-            <div id="current-budget-container">
-                <h2 id="current-name"><%= budget.name %></h2>
-                <div class="type-container" id="income-cats">
-                    <h3 class="type-heading">Income</h3>
-                    <div class="content-box-container">
-                        <div class="content-box">
-                            <h4 class="content-header">Planned: $<%= budget.income.planned %></h4>
-                            <div class="content">
-                                <% if (budget.income.groups.length === 0) { %>
-                                    <p><em>There currently are no income groups.<br>Create one below.</em></p>
-                                <% } else { %>
-                                    <ul>
-                                        <% budget.income.groups.forEach( (group) => { %>
-                                            <li>
-                                                <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
-                                            </li>
-                                        <% }) %>
-                                    </ul>
-                                <% } %>
-                            </div>
-                            <form action="/user/budgets/<%= budget._id %>/income/groups/new" method="get">
-                                <button type="submit">Add Group</button>
-                            </form>
+        <div id="current-budget-container">
+            <h2 id="current-name"><%= budget.name %></h2>
+            <div class="type-container" id="income-cats">
+                <h3 class="type-heading">Income</h3>
+                <div class="content-box-container">
+                    <div class="content-box">
+                        <h4 class="content-header">Planned: $<%= budget.income.planned %></h4>
+                        <div class="content">
+                            <% if (budget.income.groups.length === 0) { %>
+                                <p><em>There currently are no income groups.<br>Create one below.</em></p>
+                            <% } else { %>
+                                <ul>
+                                    <% budget.income.groups.forEach( (group) => { %>
+                                        <li>
+                                            <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
                         </div>
-                        <div class="content-box" id="income-entries-box">
-                            <h4 class="content-header">Earned: $<%= budget.income.current %></h4>
-                            <div class="content">
-                                <% let incomeGroupsWithEntries = [] %>
-                                <% budget.income.groups.forEach( (group) => { %>
-                                    <% if (group.entries.length !== 0) { %>
-                                        <% incomeGroupsWithEntries.push(group) %>
-                                    <% } %>
-                                <% }) %>
-                                <% if (incomeGroupsWithEntries.length === 0) { %>
-                                    <% if (budget.income.groups.length === 0) { %>
-                                        <p><em>There currently are no income groups.<br>Create one above.</em></p>
-                                    <% } else { %>
-                                        <p><em>There currently are no income entries.<br>Create one below.</em></p>
-                                    <% } %>
-                                <% } else { %>
-                                    <ul>
-                                        <% incomeGroupsWithEntries.forEach( (group) => { %>
-                                            <% group.entries.forEach( (entry) => { %>
-                                                <li>
-                                                    <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
-                                                </li>
-                                            <% }) %>
-                                        <% }) %>
-                                    </ul>
-                                <% } %>
-                            </div>
-                            <form action="<%= budget._id %><% budget.income.groups.forEach( (group) => { %>/<%= group.name %>/<%= group._id %><% }) %>" method="get" id="add-income-form">
-                                <button type="submit" id="add-income-button">Add Income</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="type-container" id="saving-cats">
-                    <h3 class="type-heading">Savings</h3>
-                    <div class="content-box-container">
-                        <div class="content-box">
-                            <h4 class="content-header">Planned: $<%= budget.savings.planned %></h4>
-                            <div class="content">
-                                <% if (budget.savings.groups.length === 0) { %>
-                                    <p><em>There currently are no savings groups.<br>Create one below.</em></p>
-                                <% } else { %>
-                                    <ul>
-                                        <% budget.savings.groups.forEach( (group) => { %>
-                                            <li>
-                                                <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
-                                            </li>
-                                        <% }) %>
-                                    </ul>
-                                <% } %>
-                            </div>
-                            <form action="/user/budgets/<%= budget._id %>/savings/groups/new" method="get">
-                                <button type="submit">Add Group</button>
-                            </form>
-                        </div>
-                        <div class="content-box" id="savings-entries-box">
-                            <h4 class="content-header">Saved: $<%= budget.savings.current %></h4>
-                            <div class="content">
-                                <% let savingsGroupsWithEntries = [] %>
-                                <% budget.savings.groups.forEach( (group) => { %>
-                                    <% if (group.entries.length !== 0) { %>
-                                        <% savingsGroupsWithEntries.push(group) %>
-                                    <% } %>
-                                <% }) %>
-                                <% if (savingsGroupsWithEntries.length === 0) { %>
-                                    <% if (budget.savings.groups.length === 0) { %>
-                                        <p><em>There currently are no savings groups.<br>Create one above.</em></p>
-                                    <% } else { %>
-                                        <p><em>There currently are no savings entries.<br>Create one below.</em></p>
-                                    <% } %>
-                                <% } else { %>
-                                    <ul>
-                                        <% savingsGroupsWithEntries.forEach( (group) => { %>
-                                            <% group.entries.forEach( (entry) => { %>
-                                                <li>
-                                                    <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
-                                                </li>
-                                            <% }) %>
-                                        <% }) %>
-                                    </ul>
-                                <% } %>
-                            </div>
-                            <form action="<%= budget._id %><% budget.savings.groups.forEach( (group) => { %>/<%= group.name %>/<%= group._id %><% }) %>" method="get" id="add-savings-form">
-                                <button type="submit" id="add-savings-button">Add Saving</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div class="type-container" id="expense-cats">
-                    <h3 class="type-heading">Expenses</h3>
-                    <div class="content-box-container">
-                        <div class="content-box">
-                            <h4 class="content-header">Planned: $<%= budget.expenses.planned %></h4>
-                            <div class="content">
-                                <% if (budget.expenses.groups.length === 0) { %>
-                                    <p><em>There currently are no expenses groups.<br>Create one below.</em></p>
-                                <% } else { %>
-                                    <ul>
-                                        <% budget.expenses.groups.forEach( (group) => { %>
-                                            <li>
-                                                <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
-                                            </li>
-                                        <% }) %>
-                                    </ul>
-                                <% } %>
-                            </div>
-                            <form action="/user/budgets/<%= budget._id %>/expenses/groups/new" method="get">
-                                <button type="submit">Add Group</button>
-                            </form>
-                        </div>
-                        <div class="content-box" id="expenses-entries-box">
-                            <h4 class="content-header">Spent: $<%= budget.expenses.current %></h4>
-                            <div class="content">
-                                <% let expensesGroupsWithEntries = [] %>
-                                <% budget.expenses.groups.forEach( (group) => { %>
-                                    <% if (group.entries.length !== 0) { %>
-                                        <% expensesGroupsWithEntries.push(group) %>
-                                    <% } %>
-                                <% }) %>
-                                <% if (expensesGroupsWithEntries.length === 0) { %>
-                                    <% if (budget.expenses.groups.length === 0) { %>
-                                        <p><em>There currently are no expenses groups.<br>Create one above.</em></p>
-                                    <% } else { %>
-                                        <p><em>There currently are no expenses entries.<br>Create one below.</em></p>
-                                    <% } %>
-                                <% } else { %>
-                                    <ul>
-                                        <% expensesGroupsWithEntries.forEach( (group) => { %>
-                                            <% group.entries.forEach( (entry) => { %>
-                                                <li>
-                                                    <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
-                                                </li>
-                                            <% }) %>
-                                        <% }) %>
-                                    </ul>
-                                <% } %>
-                            </div>
-                            <form action="<%= budget._id %><% budget.expenses.groups.forEach( (group) => { %>/<%= group.name %>/<%= group._id %><% }) %>" method="get" id="add-expenses-form">
-                                <button type="submit" id="add-expenses-button">Add Expense</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <% if (budget._id != currentBudgetId) { %>
-                    <div class="button-container" id="make-current-button">
-                        <form action="/user/budgets?current=true&id=<%= budget._id %>" method="post">
-                            <button type="submit">Make this my current budget</button>
+                        <form action="/user/budgets/<%= budget._id %>/income/groups/new" method="get">
+                            <button type="submit">Add Group</button>
                         </form>
                     </div>
-                <% } %>
-                <div id="button-container">
-                    <form action="/user/budgets/<%= budget._id %>/edit" method="get">
-                        <button type="submit">Edit Budget</button>
-                    </form>
-                    <form action="/user/budgets/<%= budget._id %>?_method=delete" method="post">
-                        <button type="submit">Delete Budget</button>
-                    </form>
+                    <div class="content-box" id="income-entries-box">
+                        <h4 class="content-header">Earned: $<%= budget.income.current %></h4>
+                        <div class="content">
+                            <% let incomeGroupsWithEntries = [] %>
+                            <% budget.income.groups.forEach( (group) => { %>
+                                <% if (group.entries.length !== 0) { %>
+                                    <% incomeGroupsWithEntries.push(group) %>
+                                <% } %>
+                            <% }) %>
+                            <% if (incomeGroupsWithEntries.length === 0) { %>
+                                <% if (budget.income.groups.length === 0) { %>
+                                    <p><em>There currently are no income groups.<br>Create one above.</em></p>
+                                <% } else { %>
+                                    <p><em>There currently are no income entries.<br>Create one below.</em></p>
+                                <% } %>
+                            <% } else { %>
+                                <ul>
+                                    <% incomeGroupsWithEntries.forEach( (group) => { %>
+                                        <% group.entries.forEach( (entry) => { %>
+                                            <li>
+                                                <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
+                                            </li>
+                                        <% }) %>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
+                        </div>
+                        <form action="<%= budget._id %><% budget.income.groups.forEach( (group) => { %>/<%= group.name %>/<%= group._id %><% }) %>" method="get" id="add-income-form">
+                            <button type="submit" id="add-income-button">Add Income</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        <% } else { %>
-            <p><em>You currently do not have any budgets. Create one here:</em></p>
-            <form action="/user/budgets/new" method="get">
-                <button type="submit">Create Budget</button>
-            </form>
-        <% } %>
+            <div class="type-container" id="saving-cats">
+                <h3 class="type-heading">Savings</h3>
+                <div class="content-box-container">
+                    <div class="content-box">
+                        <h4 class="content-header">Planned: $<%= budget.savings.planned %></h4>
+                        <div class="content">
+                            <% if (budget.savings.groups.length === 0) { %>
+                                <p><em>There currently are no savings groups.<br>Create one below.</em></p>
+                            <% } else { %>
+                                <ul>
+                                    <% budget.savings.groups.forEach( (group) => { %>
+                                        <li>
+                                            <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
+                        </div>
+                        <form action="/user/budgets/<%= budget._id %>/savings/groups/new" method="get">
+                            <button type="submit">Add Group</button>
+                        </form>
+                    </div>
+                    <div class="content-box" id="savings-entries-box">
+                        <h4 class="content-header">Saved: $<%= budget.savings.current %></h4>
+                        <div class="content">
+                            <% let savingsGroupsWithEntries = [] %>
+                            <% budget.savings.groups.forEach( (group) => { %>
+                                <% if (group.entries.length !== 0) { %>
+                                    <% savingsGroupsWithEntries.push(group) %>
+                                <% } %>
+                            <% }) %>
+                            <% if (savingsGroupsWithEntries.length === 0) { %>
+                                <% if (budget.savings.groups.length === 0) { %>
+                                    <p><em>There currently are no savings groups.<br>Create one above.</em></p>
+                                <% } else { %>
+                                    <p><em>There currently are no savings entries.<br>Create one below.</em></p>
+                                <% } %>
+                            <% } else { %>
+                                <ul>
+                                    <% savingsGroupsWithEntries.forEach( (group) => { %>
+                                        <% group.entries.forEach( (entry) => { %>
+                                            <li>
+                                                <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
+                                            </li>
+                                        <% }) %>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
+                        </div>
+                        <form action="<%= budget._id %><% budget.savings.groups.forEach( (group) => { %>/<%= group.name %>/<%= group._id %><% }) %>" method="get" id="add-savings-form">
+                            <button type="submit" id="add-savings-button">Add Saving</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="type-container" id="expense-cats">
+                <h3 class="type-heading">Expenses</h3>
+                <div class="content-box-container">
+                    <div class="content-box">
+                        <h4 class="content-header">Planned: $<%= budget.expenses.planned %></h4>
+                        <div class="content">
+                            <% if (budget.expenses.groups.length === 0) { %>
+                                <p><em>There currently are no expenses groups.<br>Create one below.</em></p>
+                            <% } else { %>
+                                <ul>
+                                    <% budget.expenses.groups.forEach( (group) => { %>
+                                        <li>
+                                            <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
+                        </div>
+                        <form action="/user/budgets/<%= budget._id %>/expenses/groups/new" method="get">
+                            <button type="submit">Add Group</button>
+                        </form>
+                    </div>
+                    <div class="content-box" id="expenses-entries-box">
+                        <h4 class="content-header">Spent: $<%= budget.expenses.current %></h4>
+                        <div class="content">
+                            <% let expensesGroupsWithEntries = [] %>
+                            <% budget.expenses.groups.forEach( (group) => { %>
+                                <% if (group.entries.length !== 0) { %>
+                                    <% expensesGroupsWithEntries.push(group) %>
+                                <% } %>
+                            <% }) %>
+                            <% if (expensesGroupsWithEntries.length === 0) { %>
+                                <% if (budget.expenses.groups.length === 0) { %>
+                                    <p><em>There currently are no expenses groups.<br>Create one above.</em></p>
+                                <% } else { %>
+                                    <p><em>There currently are no expenses entries.<br>Create one below.</em></p>
+                                <% } %>
+                            <% } else { %>
+                                <ul>
+                                    <% expensesGroupsWithEntries.forEach( (group) => { %>
+                                        <% group.entries.forEach( (entry) => { %>
+                                            <li>
+                                                <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
+                                            </li>
+                                        <% }) %>
+                                    <% }) %>
+                                </ul>
+                            <% } %>
+                        </div>
+                        <form action="<%= budget._id %><% budget.expenses.groups.forEach( (group) => { %>/<%= group.name %>/<%= group._id %><% }) %>" method="get" id="add-expenses-form">
+                            <button type="submit" id="add-expenses-button">Add Expense</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <% if (budget._id != currentBudgetId) { %>
+                <div class="button-container" id="make-current-button">
+                    <form action="/user/budgets?current=true&id=<%= budget._id %>" method="post">
+                        <button type="submit">Make this my current budget</button>
+                    </form>
+                </div>
+            <% } %>
+            <div id="button-container">
+                <form action="/user/budgets/<%= budget._id %>/edit" method="get">
+                    <button type="submit">Edit Budget</button>
+                </form>
+                <form action="/user/budgets/<%= budget._id %>?_method=delete" method="post">
+                    <button type="submit">Delete Budget</button>
+                </form>
+            </div>
+        </div>
     </main>
 </body>
 </html>
