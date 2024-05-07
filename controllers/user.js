@@ -27,39 +27,23 @@ const updateChild = async (parent, child, updatedChild) => {
 const updateBudget = async (userId, budgetId) => {
     const user = await User.findById(userId)
     const foundBudget = user.budgets.id(budgetId)
-    let newIncomePlanned = 0
-    let newIncomeReal = 0
-    let newExpensesPlanned = 0
-    let newExpensesReal = 0
 
-    foundBudget.categories.forEach( (category) => {
-        let total = 0
-        
-        // Adds each entry amount to a total for
-        // that category
-        category.entries.forEach( (entry) => {
-            total += entry.amount
+    let categoryNames = ['income', 'savings', 'expenses']
+    categoryNames.forEach( (category) => {
+        let planned = 0
+        let current = 0
+
+        foundBudget[category].groups.forEach( (group) => {
+            planned += group.planned
+            group.entries.forEach( (entry) => {
+                current += entry.amount
+            })
         })
-        
-        // Saves real total value for category
-        category.total = total
 
-        // Adds to the planned and total values
-        // based on income/expense
-        if (category.isIncome) {
-            newIncomePlanned += category.planned
-            newIncomeReal += category.total
-        } else {
-            newExpensesPlanned += category.planned
-            newExpensesReal += category.total
-        }
+        foundBudget[category].planned = planned
+        foundBudget[category].current = current
     })
 
-    // Updates all new values and saves
-    foundBudget.incomePlanned = newIncomePlanned
-    foundBudget.incomeReal = newIncomeReal
-    foundBudget.expensesPlanned = newExpensesPlanned
-    foundBudget.expensesReal = newExpensesReal
     await user.save()
 }
 
@@ -366,31 +350,28 @@ router.get('/budgets/:budgetId/:type/groups/new', isSignedIn, async (req, res) =
 router.post('/budgets/:budgetId/:type/groups', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    let newCategory = req.body
     
-    // Changes isIncome type to boolean
-    if(newCategory.isIncome === 'true') {
-        newCategory.isIncome = true
-    } else if(newCategory.isIncome === 'false') {
-        newCategory.isIncome = false
-    }
-    
-    // Changes String input to Number and inits total
-    newCategory.planned = parseFloat(newCategory.planned)
-    newCategory.total = 0
+    let newGroup = req.body
+    let type = newGroup.type
+    delete newGroup.type
+    newGroup.current = 0
 
-    // Creates new category and updates the newCategory obj (for ref
-    // in redirect), then pushes it to category array and saves the
-    // category changes
-    newCategory = foundBudget.categories.create(newCategory)
-    foundBudget.categories.push(newCategory)
+    // Creates new group and updates the newGroup obj (for ref
+    // in redirect), then pushes it to group array and saves the
+    // user changes
+    newGroup = foundBudget[type].groups.create(newGroup)
+    foundBudget[type].groups.push(newGroup)
     await user.save()
 
     // Updates planned and total values on budget with
     // new planned amounts added by the user
     await updateBudget(user._id, foundBudget._id)
     
-    res.redirect(`/user-budgets/${req.params.budgetId}/categories/${newCategory._id}`)
+    if (foundBudget._id == user.currentBudgetId) {
+        res.redirect('/user/dashboard')
+    } else {
+        res.redirect(`/user/budgets/${foundBudget._id}`)
+    }
 })
 
 router.get('/budgets/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
