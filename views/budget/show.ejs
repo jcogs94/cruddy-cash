@@ -19,7 +19,7 @@
                         <h4 class="content-header">Planned: $<%= budget.income.planned %></h4>
                         <div class="content">
                             <% if (budget.income.groups.length === 0) { %>
-                                <p><em>There currently are no income groups. Create one below.</em></p>
+                                <p><em>There currently are no income groups.<br>Create one below.</em></p>
                             <% } else { %>
                                 <ul>
                                     <% budget.income.groups.forEach( (group) => { %>
@@ -52,7 +52,7 @@
                         <h4 class="content-header">Planned: $<%= budget.savings.planned %></h4>
                         <div class="content">
                             <% if (budget.savings.groups.length === 0) { %>
-                                <p><em>There currently are no savings groups. Create one below.</em></p>
+                                <p><em>There currently are no savings groups.<br>Create one below.</em></p>
                             <% } else { %>
                                 <ul>
                                     <% budget.savings.groups.forEach( (group) => { %>
@@ -85,7 +85,7 @@
                         <h4 class="content-header">Planned: $<%= budget.expenses.planned %></h4>
                         <div class="content">
                             <% if (budget.expenses.groups.length === 0) { %>
-                                <p><em>There currently are no expenses groups. Create one below.</em></p>
+                                <p><em>There currently are no expenses groups.<br>Create one below.</em></p>
                             <% } else { %>
                                 <ul>
                                     <% budget.expenses.groups.forEach( (group) => { %>
