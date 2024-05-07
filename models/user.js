@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const entrySchema = new mongoose.Schema({
     name: String,
-    postedDay: Number,
+    postedDate: String,
     amount: Number
 })
 

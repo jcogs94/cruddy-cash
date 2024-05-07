@@ -10,9 +10,9 @@
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h2><%= category.name %></h2>
+        <h2><%= group.name %> (<%= type %>)</h2>
         <h3>New Entry</h3>
-        <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries" method="post">
+        <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Create Entry</legend>
                 <div>
@@ -20,13 +20,14 @@
                     <input type="text" name="name">
                 </div>
                 <div>
-                    <label for="postedDay">Day Posted:</label><br>
-                    <input type="number" name="postedDay">
+                    <label for="postedDate">Date Posted:</label><br>
+                    <input type="date" name="postedDate">
                 </div>
                 <div>
                     <label for="amount">Amount:</label><br>
-                    <input type="number" name="amount">
+                    <input type="number" name="amount" step=".01">
                 </div>
+                <input type="hidden" name="type" value="<%= type %>">
                 <button type="submit">Create</button>
             </fieldset>
         </form>
