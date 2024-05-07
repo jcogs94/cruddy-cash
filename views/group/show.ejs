@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/show.css">
-    <link rel="stylesheet" href="/css/indexList.css">
     <title>CRUDdy Cash - <%= group.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
-        <h1><%= budget.name %></h1>
+        <h1 id="current-name"><%= budget.name %></h1>
         <div class="group-info">
             <h2><%= group.name %> (<%= type %>)</h2>
             <p><b>Planned:</b> $<%= group.planned %></p>
@@ -29,17 +28,17 @@
                 <% }) %>
             </ul>
         <% } %>
-        <div>
-            <form action="/user-budgets/<%= budget._id %>" method="get">
-                <button type="submit">Go Back</button>
+        <div class="button-container">
+            <form action="/user/budgets/<%= budget._id %>" method="get">
+                <button type="submit">Back</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= group._id %>/entries/new" method="get">
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/new" method="get">
                 <button type="submit">Create Entry</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= group._id %>/edit" method="get">
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= group._id %>?_method=delete" method="post">
+            <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>

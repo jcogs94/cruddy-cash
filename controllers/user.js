@@ -351,7 +351,6 @@ router.post('/budgets/:budgetId/:type/groups', isSignedIn, async (req, res) => {
 })
 
 router.get('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, res) => {
-    console.log('ran group show page route...')
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
@@ -400,18 +399,18 @@ router.put('/budgets/:budgetId/categories/:categoryId', isSignedIn, async (req, 
     res.redirect(`/user-budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
 })
 
-router.delete('/budgets/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
+router.delete('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
     
-    foundBudget.categories.pull(req.params.categoryId)
+    foundBudget[req.params.type].groups.pull(req.params.groupId)
     await user.save()
 
     // Updates planned and total values after category
     // deleted by user
     await updateBudget(user._id, foundBudget._id)
     
-    res.redirect(`/user-budgets/${req.params.budgetId}`)
+    res.redirect(`/user/budgets/${req.params.budgetId}`)
 })
 
 // ---------------- ENTRIES ----------------- //
