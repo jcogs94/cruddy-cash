@@ -4,37 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <title>CRUDdy Cash - Edit <%= category.name %></title>
+    <title>CRUDdy Cash - Edit <%= group.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h2><%= category.name %></h2>
-        <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>?_method=put" method="post">
+        <h2><%= group.name %> (<%= type %>)</h2>
+        <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>?_method=put" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Edit</legend>
                 <div>
                     <label for="name">Name:</label>
-                    <input type="text" name="name" value="<%= category.name %>">
-                </div>
-                <div>
-                    <label for="income-group">Is this income?</label>
-                    <div name="income-group">
-                        <label for="income-yes">Yes</label>
-                        <input type="radio" id="income-yes" name="isIncome" value="true" <% if (category.isIncome) { %>
-                            checked
-                        <% } %>>
-                        <label for="income-no">No</label>
-                        <input type="radio" id="income-no" name="isIncome" value="false" <% if (!category.isIncome) { %>
-                            checked
-                        <% } %>>
-                    </div>
+                    <input type="text" name="name" value="<%= group.name %>">
                 </div>
                 <div class="two-line-input">
                     <label for="planned">How much do you plan for this month?</label>
-                    <input type="number" name="planned" step=".01" value="<%= category.planned %>">
+                    <input type="number" name="planned" step=".01" value="<%= group.planned %>">
                 </div>
+                <input type="hidden" name="type" value="<%= type %>">
                 <button type="submit">Update</button>
             </fieldset>
         </form>

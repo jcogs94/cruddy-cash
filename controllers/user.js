@@ -362,41 +362,34 @@ router.get('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, r
     })
 })
 
-router.get('/budgets/:budgetId/categories/:categoryId/edit', isSignedIn, async (req, res) => {
+router.get('/budgets/:budgetId/:type/groups/:groupId/edit', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
     
-    res.render('category/edit.ejs', {
+    res.render('group/edit.ejs', {
         budget: foundBudget,
-        category: foundCategory
+        type: req.params.type,
+        group: foundGroup
     })
 })
 
-router.put('/budgets/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
+router.put('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
-    const updatedCategory = req.body
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
     
-    // Changes isIncome type to boolean
-    if(updatedCategory.isIncome === 'true') {
-        updatedCategory.isIncome = true
-    } else if(updatedCategory.isIncome === 'false') {
-        updatedCategory.isIncome = false
-    }
-
-    // Changes String input to Number
-    updatedCategory.planned = parseFloat(updatedCategory.planned)
-
+    const updatedGroup = req.body
+    delete updatedGroup.type
+    
     // Updates budget with new values added by user
-    updateChild(user, foundCategory, updatedCategory)
-
+    updateChild(user, foundGroup, updatedGroup)
+    
     // Updates planned and total values on budget with
     // new planned amounts added by the user
     await updateBudget(user._id, foundBudget._id)
-
-    res.redirect(`/user-budgets/${req.params.budgetId}/categories/${req.params.categoryId}`)
+    
+    res.redirect(`/user/budgets/${req.params.budgetId}/${req.params.type}/groups/${req.params.groupId}`)
 })
 
 router.delete('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, res) => {
