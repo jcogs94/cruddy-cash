@@ -407,27 +407,6 @@ router.delete('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req
 })
 
 // ---------------- ENTRIES ----------------- //
-router.get('/budgets/entries', isSignedIn, async (req, res) => {
-    const allEntries = await Entry.find()
-
-    // Sorts all entries into arrays by each postedDay value
-    let entriesByDay = {}
-    allEntries.forEach( (entry) => {
-        // Creates array if there isn't one for that postedDay
-        if (entriesByDay[entry.postedDay] === undefined) {
-            entriesByDay[entry.postedDay] = []
-        }
-
-        // Adds entry to array with key value of postedDay
-        entriesByDay[entry.postedDay].push(entry)
-    })
-    
-    res.render('entry/index.ejs', {
-        entries: entriesByDay,
-        entriesKeys: Object.keys(entriesByDay)
-    })
-})
-
 router.get('/budgets/:budgetId/:type/groups/:groupId/entries/new', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
@@ -512,16 +491,16 @@ router.put('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId', isSigned
 router.delete('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
     
-    foundCategory.entries.pull(req.params.entryId)
+    foundGroup.entries.pull(req.params.entryId)
     await user.save()
 
-    // Updates budget planned and total values with entry
+    // Updates budget planned and total values after entry
     // deleted by user
     await updateBudget(user._id, foundBudget._id)
     
-    res.redirect(`/user-budgets/${foundBudget._id}/categories/${foundCategory._id}`)
+    res.redirect(`/user/budgets/${foundBudget._id}/${req.params.type}/groups/${foundGroup._id}`)
 })
 
 
