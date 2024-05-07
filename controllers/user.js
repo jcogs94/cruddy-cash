@@ -464,12 +464,13 @@ router.post('/budgets/:budgetId/:type/groups/:groupId/entries', isSignedIn, asyn
 router.get('/budgets/:budgetId/:type/groups/:groupId/entries/:entryId', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
-    const foundEntry = foundCategory.entries.id(req.params.entryId)
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
+    const foundEntry = foundGroup.entries.id(req.params.entryId)
 
     res.render('entry/show.ejs', {
         budget: foundBudget,
-        category: foundCategory,
+        type: req.params.type,
+        group: foundGroup,
         entry: foundEntry
     })
 })
