@@ -24,7 +24,7 @@
                                 <ul>
                                     <% budget.income.groups.forEach( (group) => { %>
                                         <li>
-                                            <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>"><%= group.name %></a>
+                                            <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
                                         </li>
                                     <% }) %>
                                 </ul>
@@ -57,7 +57,7 @@
                                 <ul>
                                     <% budget.savings.groups.forEach( (group) => { %>
                                         <li>
-                                            <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>"><%= group.name %></a>
+                                            <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
                                         </li>
                                     <% }) %>
                                 </ul>
@@ -90,7 +90,7 @@
                                 <ul>
                                     <% budget.expenses.groups.forEach( (group) => { %>
                                         <li>
-                                            <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>"><%= group.name %></a>
+                                            <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>"><%= group.name %> - $<%= group.planned %></a>
                                         </li>
                                     <% }) %>
                                 </ul>

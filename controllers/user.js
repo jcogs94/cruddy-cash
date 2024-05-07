@@ -314,30 +314,6 @@ router.delete('/budgets/:budgetId', isSignedIn, async (req, res) => {
 })
 
 // ------------------- Groups ----------------- //
-router.get('/budgets/categories', isSignedIn, async (req, res) => {
-    const allCategories = await Category.find()
-    
-    // Define arrays for income and expense based on
-    // isIncome
-    let incomeCategories = []
-    let expenseCategories = []
-    
-    // Loop through allCategories and push accordingly
-    // to sort by isIncome
-    allCategories.forEach( (category) => {
-        if(category.isIncome) {
-            incomeCategories.push(category)
-        } else {
-            expenseCategories.push(category)
-        }
-    })
-    
-    res.render('./category/index.ejs', {
-        incomeCategories: incomeCategories,
-        expenseCategories: expenseCategories
-    })
-})
-
 router.get('/budgets/:budgetId/:type/groups/new', isSignedIn, async (req, res) => {
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
@@ -374,14 +350,16 @@ router.post('/budgets/:budgetId/:type/groups', isSignedIn, async (req, res) => {
     }
 })
 
-router.get('/budgets/:budgetId/categories/:categoryId', isSignedIn, async (req, res) => {
+router.get('/budgets/:budgetId/:type/groups/:groupId', isSignedIn, async (req, res) => {
+    console.log('ran group show page route...')
     const user = await User.findById(req.session.user._id)
     const foundBudget = user.budgets.id(req.params.budgetId)
-    const foundCategory = foundBudget.categories.id(req.params.categoryId)
+    const foundGroup = foundBudget[req.params.type].groups.id(req.params.groupId)
 
-    res.render('category/show.ejs', {
+    res.render('group/show.ejs', {
         budget: foundBudget,
-        category: foundCategory
+        type: req.params.type,
+        group: foundGroup
     })
 })
 

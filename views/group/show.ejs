@@ -6,29 +6,25 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/show.css">
     <link rel="stylesheet" href="/css/indexList.css">
-    <title>CRUDdy Cash - <%= category.name %></title>
+    <title>CRUDdy Cash - <%= group.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <div class="category-info">
-            <h2><%= category.name %> (<% if(category.isIncome) { %>
-                income
-            <% } else { %>
-                expense
-            <% } %>)</h2>
-            <p><b>Planned:</b> $<%= category.planned %></p>
-            <p><b>Total:</b> $<%= category.total %></p>
+        <div class="group-info">
+            <h2><%= group.name %> (<%= type %>)</h2>
+            <p><b>Planned:</b> $<%= group.planned %></p>
+            <p><b>Current Total:</b> $<%= group.current %></p>
         </div>
-        <% if(category.entries.length === 0) { %>
-            <p><em>There are no entries for this category.</em></p>
+        <% if(group.entries.length === 0) { %>
+            <p><em>There are no <%= type %> entries yet for this group.</em></p>
         <% } else { %>
             <h2>Entries</h2>
             <ul>
-                <% category.entries.forEach( (entry) => { %>
+                <% group.entries.forEach( (entry) => { %>
                     <li>
-                        <a href="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/<%= entry._id %>"><b><%= entry.name %>:</b> $<%= entry.amount %></a>
+                        <a href="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
                     </li>
                 <% }) %>
             </ul>
@@ -37,13 +33,13 @@
             <form action="/user-budgets/<%= budget._id %>" method="get">
                 <button type="submit">Go Back</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/entries/new" method="get">
+            <form action="/user-budgets/<%= budget._id %>/categories/<%= group._id %>/entries/new" method="get">
                 <button type="submit">Create Entry</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>/edit" method="get">
+            <form action="/user-budgets/<%= budget._id %>/categories/<%= group._id %>/edit" method="get">
                 <button type="submit">Edit</button>
             </form>
-            <form action="/user-budgets/<%= budget._id %>/categories/<%= category._id %>?_method=delete" method="post">
+            <form action="/user-budgets/<%= budget._id %>/categories/<%= group._id %>?_method=delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div>
