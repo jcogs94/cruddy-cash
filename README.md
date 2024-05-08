@@ -4,12 +4,18 @@
 ## Overview
 This app will allow you to keep track of all your finances in a quick and easy way.
 
+## Screenshots
+
+### Landing Page
 ![Landing Page](/public/img/landing-page.jpg)
 
+### Dashboard
 ![Dashboard](/public/img/dashboard.jpg)
 
-![Adding Entry From Dashboard](/public/img/add-enty.jpg)
+### Adding New Entry from Group Options on Dashboard
+![Adding Entry From Dashboard](/public/img/add-entry.jpg)
 
+### Adding a New Group
 ![Adding Group](/public/img/add-group.jpg)
 
 ## Getting Started:
