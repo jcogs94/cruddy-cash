@@ -35,9 +35,13 @@ const updateBudget = async (userId, budgetId) => {
 
         foundBudget[category].groups.forEach( (group) => {
             planned += group.planned
+
+            let groupCurrent = 0
             group.entries.forEach( (entry) => {
-                current += entry.amount
+                groupCurrent += entry.amount
             })
+            group.current = groupCurrent
+            current += groupCurrent
         })
 
         foundBudget[category].planned = planned

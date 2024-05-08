@@ -14,7 +14,7 @@
         <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>?_method=put" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Edit</legend>
-                <div>
+                <div class="two-line-input">
                     <label for="name">Name:</label>
                     <input type="text" name="name" value="<%= group.name %>">
                 </div>

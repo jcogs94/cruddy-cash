@@ -11,12 +11,16 @@
     <%- include('../partials/nav.ejs') %>
     <main>
         <h1><%= budget.name %></h1>
-        <h2><%= group.name %> (<%= type %>)</h2>
-        <h3><%= entry.name %></h3>
-        <ul>
-            <li><b>Date Posted:</b> <%= entry.postedDate %></li>
-            <li><b>Amount:</b> $<%= entry.amount %></li>
-        </ul>
+        <div class="group-info">
+            <h2><%= group.name %> (<%= type %>)</h2>
+        </div>
+        <div class="group-entries">
+            <h3><%= entry.name %></h3>
+            <ul>
+                <li><b>Date Posted:</b> <%= entry.postedDate %></li>
+                <li><b>Amount:</b> $<%= entry.amount %></li>
+            </ul>
+        </div>
         <div class="button-container">
             <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>" method="get">
                 <button type="submit">Back</button>

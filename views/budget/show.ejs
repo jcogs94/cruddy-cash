@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/show.css">
+    <link rel="stylesheet" href="/css/dashboard.css">
     <script defer src="/js/add-entry-button.js"></script>
     <title>CRUDdy Cash - <%= budget.name %></title>
 </head>
 <body>
     <%- include('../partials/nav.ejs') %>
     <main>
+        <h1>View Budget</h1>
         <div id="current-budget-container">
             <h2 id="current-name"><%= budget.name %></h2>
             <div class="type-container" id="income-cats">

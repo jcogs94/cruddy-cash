@@ -62,8 +62,8 @@
     align-content: center;
     justify-content: center;
     gap: 10px;
-    width: 100%;
-    padding: 10px 0;
+    width: 100vw;
+    padding: 15px 0;
     background-color: black;
 }
 
@@ -85,4 +85,31 @@
 .content > ul > li > a {
     text-decoration: none;
     color: white;
+}
+
+.group-info {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 20px 0;
+    background-color: black;
+    color: white;
+}
+
+.group-entries {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 0;
+
+    h2, h3 {
+        text-align: center;
+    }
+
+    ul > li {
+        margin: 5px 0;
+    }
 }

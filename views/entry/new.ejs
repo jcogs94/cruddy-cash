@@ -15,16 +15,16 @@
         <form action="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries" method="post">
             <fieldset aria-labelledby="new-entry-legend">
                 <legend name="new-entry-legend">Create Entry</legend>
-                <div>
-                    <label for="name">Name:</label><br>
+                <div class="two-line-input">
+                    <label for="name">Name:</label>
                     <input type="text" name="name">
                 </div>
-                <div>
-                    <label for="postedDate">Date Posted:</label><br>
+                <div class="two-line-input">
+                    <label for="postedDate">Date:</label>
                     <input type="date" name="postedDate">
                 </div>
-                <div>
-                    <label for="amount">Amount:</label><br>
+                <div class="two-line-input">
+                    <label for="amount">Amount:</label>
                     <input type="number" name="amount" step=".01">
                 </div>
                 <input type="hidden" name="type" value="<%= type %>">

@@ -19,14 +19,16 @@
         <% if(group.entries.length === 0) { %>
             <p><em>There are no <%= type %> entries yet for this group.</em></p>
         <% } else { %>
-            <h2>Entries</h2>
-            <ul>
-                <% group.entries.forEach( (entry) => { %>
-                    <li>
-                        <a href="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
-                    </li>
-                <% }) %>
-            </ul>
+            <div class="group-entries">
+                <h2>Entries</h2>
+                <ul>
+                    <% group.entries.forEach( (entry) => { %>
+                        <li>
+                            <a href="/user/budgets/<%= budget._id %>/<%= type %>/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
         <% } %>
         <div class="button-container">
             <form action="/user/budgets/<%= budget._id %>" method="get">

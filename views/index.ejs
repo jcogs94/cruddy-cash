@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <title>CRUDdy Cash</title>
 </head>
 <body>
     <%- include('./partials/home-nav.ejs') %>
     <main>
-        <h1>Home Page</h1>
+        <h1 id="welcome-message">Welcome to<br>CRUDdy Cash!</h1>
         <% if (user) { %>
-            <h2>Welcome to the app, <%= user.userEmail %>!</h2>
-            <p>
-                <a href="/auth/sign-out">Sign Out</a>
-            </p>
+            <p class="error-message"><em>Something went wrong.<br>Try signing out and back in again.</em></p>
+            <form action="/auth/sign-out" method="get">
+                <button type="submit">Sign Out</button>
+            </form>
         <% } else { %>
-            <h2>Welcome to the app, guest.</h2>
-            <p>
-                <a href="/auth/new-account">Sign up</a> or <a href="/auth/sign-in">sign in</a>.
-            </p>
+            <div id="landing-page-prompt-container">
+                <p><b>Create a New Account or Sign In</b></p>
+                <div id="button-container">
+                    <form action="/auth/new-account" method="get">
+                        <button type="submit">Sign Up</button>
+                    </form>
+                    <form action="/auth/sign-in" method="get">
+                        <button type="submit">Sign In</button>
+                    </form>
+                </div>
+            </div>
         <% } %>
     </main>
 </body>

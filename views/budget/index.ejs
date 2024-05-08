@@ -27,6 +27,9 @@
         <% } else { %>
             <p><em>There are no budgets created yet</em></p>
         <% } %>
+        <form action="/user/budgets/new" method="get">
+            <button type="submit">New Budget</button>
+        </form>
     </main>
 </body>
 </html>
