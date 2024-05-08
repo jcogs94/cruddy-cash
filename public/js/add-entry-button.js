@@ -151,5 +151,4 @@ class Categories {
 }
 
 
-const categoriesArr = ['income', 'savings', 'expenses']
-const categories = new Categories(categoriesArr)
+const categories = new Categories( ['income', 'savings', 'expenses'] )
