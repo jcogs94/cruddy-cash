@@ -6,6 +6,12 @@ This app will allow you to keep track of all your finances in a quick and easy w
 
 ![Landing Page](/public/img/landing-page.jpg)
 
+![Dashboard](/public/img/dashboard.jpg)
+
+![Adding Entry From Dashboard](/public/img/add-enty.jpg)
+
+![Adding Group](/public/img/add-group.jpg)
+
 ## Getting Started:
 You can find the link to the app [here](http://18.224.41.247:3000/) and see the process that I took [here](https://trello.com/b/X7KRsf6z).
 
@@ -25,3 +31,5 @@ You can find the link to the app [here](http://18.224.41.247:3000/) and see the 
 - Reviewing the model structure to ensure efficiency.
 - Reworking the CSS structure to simplify the layout of the files.
 - More interactive elements to make adding/editing/removing groups and entries more intuitive (perhaps with the use of iframes).
+- Add images to landing page.
+- Add a guide for new users.
