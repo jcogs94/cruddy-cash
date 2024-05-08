@@ -111,6 +111,13 @@ main {
     text-align: center;
 }
 
+.entry {
+    color: white;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
 @media screen and (min-width: 650px) {
     
 }

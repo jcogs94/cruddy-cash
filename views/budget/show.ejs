@@ -55,7 +55,8 @@
                                 <ul>
                                     <% incomeGroupsWithEntries.forEach( (group) => { %>
                                         <% group.entries.forEach( (entry) => { %>
-                                            <li>
+                                            <li class="entry">
+                                                <p><%= entry.postedDate %></p>
                                                 <a href="/user/budgets/<%= budget._id %>/income/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
                                             </li>
                                         <% }) %>
@@ -110,7 +111,8 @@
                                 <ul>
                                     <% savingsGroupsWithEntries.forEach( (group) => { %>
                                         <% group.entries.forEach( (entry) => { %>
-                                            <li>
+                                            <li class="entry">
+                                                <p><%= entry.postedDate %></p>
                                                 <a href="/user/budgets/<%= budget._id %>/savings/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
                                             </li>
                                         <% }) %>
@@ -165,7 +167,8 @@
                                 <ul>
                                     <% expensesGroupsWithEntries.forEach( (group) => { %>
                                         <% group.entries.forEach( (entry) => { %>
-                                            <li>
+                                            <li class="entry">
+                                                <p><%= entry.postedDate %></p>
                                                 <a href="/user/budgets/<%= budget._id %>/expenses/groups/<%= group._id %>/entries/<%= entry._id %>"><b><%= entry.name %></b> - $<%= entry.amount %></a>
                                             </li>
                                         <% }) %>
